@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:verboesboco.base44.app)",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-git)",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-git --yes)",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-git --yes --name verbo)",
+      "Read(//c/Users/Robson Brito/Desktop/ROBSON BRITTO/**)",
+      "Bash(npx create-next-app@latest verbo-temp --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-git --yes)",
+      "Bash(cp -r verbo-temp/. VERBO/)",
+      "Bash(rm -rf verbo-temp)",
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run:*)",
+      "Bash(\"C:/Users/Robson Brito/Desktop/ROBSON BRITTO/VERBO/.gitignore\")",
+      "Bash(ssh-keygen -t ed25519 -C \"verbo-esbocos\" -f ~/.ssh/verbo_deploy -N \"\")",
+      "Bash(ssh -T git@github-verbo)"
+    ]
+  }
+}
