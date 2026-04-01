@@ -103,3 +103,22 @@ html, body {
 .tiptap u {
   text-decoration: underline;
 }
+
+/* Modo Púlpito — estilos de leitura */
+.pulpito-content p { margin-bottom: 0.75rem; }
+.pulpito-content h1 { font-size: 1.6rem; font-weight: 700; color: #fff; margin-bottom: 0.75rem; }
+.pulpito-content h2 { font-size: 1.3rem; font-weight: 600; color: #fff; margin-bottom: 0.5rem; }
+.pulpito-content h3 { font-size: 1.1rem; font-weight: 600; color: #fff; margin-bottom: 0.5rem; }
+.pulpito-content strong { color: #fff; font-weight: 700; }
+.pulpito-content em { color: rgba(255,255,255,0.8); font-style: italic; }
+.pulpito-content u { text-decoration: underline; text-decoration-color: #f97316; }
+.pulpito-content ul { list-style: disc; padding-left: 1.5rem; margin-bottom: 0.75rem; }
+.pulpito-content ol { list-style: decimal; padding-left: 1.5rem; margin-bottom: 0.75rem; }
+.pulpito-content li { margin-bottom: 0.35rem; }
+.pulpito-content blockquote {
+  border-left: 3px solid #f97316;
+  padding-left: 1rem;
+  color: rgba(255,255,255,0.6);
+  font-style: italic;
+  margin: 1rem 0;
+}

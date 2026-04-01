@@ -5,10 +5,11 @@ import { useRouter } from 'next/navigation'
 import type { Esboco, Pasta, EsbocStatus } from '@/types'
 import {
   Star, MoreVertical, Trash2, CheckCircle, FileText,
-  Mic, FolderOpen, Tag, Save, Loader2, BookOpen, X, Plus
+  Mic, FolderOpen, Tag, Save, Loader2, BookOpen, X, MonitorPlay
 } from 'lucide-react'
 import { updateEsboco, deleteEsboco, toggleFixado } from '@/lib/actions'
 import TiptapEditor from './TiptapEditor'
+import ModoPulpito from './ModoPulpito'
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
@@ -43,6 +44,7 @@ export default function EsbocoEditor({ esboco: inicial, pastas }: Props) {
   const [pastaMenu, setPastaMenu] = useState(false)
   const [tagInput, setTagInput] = useState('')
   const [secaoAberta, setSecaoAberta] = useState<SecaoKey | null>(null)
+  const [modoPulpito, setModoPulpito] = useState(false)
 
   const [dados, setDados] = useState({
     titulo: inicial.titulo,
@@ -113,6 +115,16 @@ export default function EsbocoEditor({ esboco: inicial, pastas }: Props) {
   const pasta = pastas.find(p => p.id === dados.pasta_id)
 
   return (
+    <>
+    {modoPulpito && (
+      <ModoPulpito
+        esboco={{ ...inicial, ...dados }}
+        onFechar={() => setModoPulpito(false)}
+        onPregado={(data, local) => {
+          update('status', 'pregado')
+        }}
+      />
+    )}
     <div className="flex-1 flex flex-col overflow-hidden bg-white">
       {/* Header do editor */}
       <div className="border-b border-[#e5e5e0] px-6 py-3">
@@ -219,6 +231,16 @@ export default function EsbocoEditor({ esboco: inicial, pastas }: Props) {
               )}
             </div>
 
+            {/* Modo Púlpito */}
+            <button
+              onClick={() => setModoPulpito(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#1c1c1e] hover:bg-[#2c2c2e] text-white rounded-lg text-xs font-medium transition"
+              title="Modo Púlpito"
+            >
+              <MonitorPlay className="w-3.5 h-3.5" />
+              Púlpito
+            </button>
+
             {/* Menu */}
             <div className="relative">
               <button
@@ -285,6 +307,7 @@ export default function EsbocoEditor({ esboco: inicial, pastas }: Props) {
         </div>
       </div>
     </div>
+    </>
   )
 }
 
