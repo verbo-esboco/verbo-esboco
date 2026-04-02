@@ -33,14 +33,18 @@ export default function LoginPage() {
       const { error } = await supabase.auth.signUp({
         email,
         password: senha,
-        options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
       })
       if (error) {
         setError('Erro ao criar conta. Tente novamente.')
       } else {
-        setError('')
-        setModo('entrar')
-        alert('Conta criada! Confirme seu e-mail e depois entre.')
+        // Login automático após cadastro
+        const { error: loginError } = await supabase.auth.signInWithPassword({ email, password: senha })
+        if (!loginError) {
+          router.push('/esbocos')
+          router.refresh()
+        } else {
+          setModo('entrar')
+        }
       }
     }
 
