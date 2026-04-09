@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 import type { User } from '@supabase/supabase-js'
 import type { Esboco, Pasta } from '@/types'
 import EsbocoList from './EsbocoList'
-import { Plus, LogOut, ArrowLeft, Home, History } from 'lucide-react'
+import { Plus, LogOut, ArrowLeft } from 'lucide-react'
 import { signOut, createEsboco } from '@/lib/actions'
 import Image from 'next/image'
 
@@ -32,34 +32,51 @@ export default function AppShell({ user, esbocos, pastas, children }: Props) {
   }
 
   return (
-    <div className="h-screen flex flex-col md:flex-row overflow-hidden" style={{ background: 'var(--bg)' }}>
+    <div className="h-screen flex overflow-hidden" style={{ background: 'var(--bg)' }}>
 
-      {/* ── Sidebar ─────────────────────────────────────────── */}
+      {/* ── Painel Lista — full-width quando não editando ─── */}
       <div
-        className={`flex flex-col md:w-[340px] lg:w-[380px] shrink-0 ${isEditing ? 'hidden md:flex' : 'flex flex-1'}`}
-        style={{ background: 'var(--surface)', borderRight: '1px solid var(--line)' }}
+        className={`flex flex-col shrink-0 transition-all ${
+          isEditing
+            ? 'hidden md:flex md:w-[320px] lg:w-[360px]'
+            : 'flex w-full md:w-full'
+        }`}
+        style={{ background: 'var(--surface)', borderRight: isEditing ? '1px solid var(--line)' : 'none' }}
       >
         {/* Header */}
         <div
-          className="flex items-center justify-between px-5 py-4 shrink-0"
-          style={{ borderBottom: '1px solid var(--line)' }}
+          className="flex items-center justify-between shrink-0"
+          style={{
+            borderBottom: '1px solid var(--line)',
+            padding: isEditing ? '12px 16px' : '16px 24px',
+          }}
         >
-          <div className="flex items-center gap-2.5">
-            <Image src="/verbo.png" alt="VERBO" width={32} height={32} className="object-contain" />
+          <div className="flex items-center gap-3">
+            <Image src="/verbo.png" alt="VERBO" width={isEditing ? 28 : 36} height={isEditing ? 28 : 36} className="object-contain" />
             <div>
-              <p className="font-bold text-sm leading-tight tracking-tight" style={{ color: 'var(--ink-1)' }}>VERBO</p>
-              <p className="text-[10px] leading-tight" style={{ color: 'var(--ink-4)' }}>Esboços Bíblicos</p>
+              <p className="font-bold leading-tight tracking-tight" style={{ fontSize: isEditing ? '0.875rem' : '1rem', color: 'var(--ink-1)' }}>VERBO</p>
+              {!isEditing && <p className="text-xs leading-tight" style={{ color: 'var(--ink-4)' }}>Esboços Bíblicos</p>}
             </div>
+            {!isEditing && (
+              <span className="text-sm ml-1" style={{ color: 'var(--ink-4)' }}>
+                · {esbocos.length} esboço{esbocos.length !== 1 ? 's' : ''}
+              </span>
+            )}
           </div>
 
           <div className="flex items-center gap-2">
             <button
               onClick={handleNovo}
               disabled={isPending}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold text-white transition hover:opacity-90 active:scale-95 disabled:opacity-50"
-              style={{ background: 'var(--brand)', boxShadow: 'var(--shadow-brand)' }}
+              className="flex items-center gap-2 rounded-full font-semibold text-white transition hover:opacity-90 active:scale-95 disabled:opacity-50"
+              style={{
+                background: 'var(--brand)',
+                boxShadow: 'var(--shadow-brand)',
+                padding: isEditing ? '7px 14px' : '10px 20px',
+                fontSize: isEditing ? '0.75rem' : '0.875rem',
+              }}
             >
-              <Plus className="w-4 h-4" />
+              <Plus className={isEditing ? 'w-3.5 h-3.5' : 'w-4 h-4'} />
               Novo
             </button>
             <form action={signOut}>
@@ -77,12 +94,12 @@ export default function AppShell({ user, esbocos, pastas, children }: Props) {
 
         {/* Lista */}
         <div className="flex-1 overflow-hidden">
-          <EsbocoList esbocos={esbocos} pastas={pastas} />
+          <EsbocoList esbocos={esbocos} pastas={pastas} compacto={isEditing} />
         </div>
 
         {/* Bottom nav mobile */}
         <div
-          className="md:hidden flex items-center justify-around border-t shrink-0 relative"
+          className="md:hidden flex items-center justify-around border-t shrink-0"
           style={{
             borderColor: 'var(--line)',
             paddingTop: '0.875rem',
@@ -91,29 +108,32 @@ export default function AppShell({ user, esbocos, pastas, children }: Props) {
           }}
         >
           <Link href="/esbocos" className="flex flex-col items-center gap-1 px-6">
-            <Home className="w-5 h-5" style={{ color: 'var(--brand)' }} />
-            <span className="text-[10px] font-medium" style={{ color: 'var(--brand)' }}>Início</span>
+            <svg className="w-5 h-5" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: 'var(--brand)' }}>
+              <rect x="3" y="3" width="14" height="14" rx="2"/>
+              <line x1="3" y1="8" x2="17" y2="8"/>
+              <line x1="7" y1="8" x2="7" y2="17"/>
+            </svg>
+            <span className="text-[10px] font-medium" style={{ color: 'var(--brand)' }}>Esboços</span>
           </Link>
 
           <button
             onClick={handleNovo}
             disabled={isPending}
-            className="w-14 h-14 rounded-2xl flex items-center justify-center text-white transition -mt-8 disabled:opacity-60 active:scale-95 hover:opacity-90"
+            className="w-14 h-14 rounded-2xl flex items-center justify-center text-white -mt-8 disabled:opacity-60 active:scale-95 hover:opacity-90"
             style={{ background: 'var(--brand)', boxShadow: 'var(--shadow-fab)' }}
           >
             <Plus className="w-6 h-6" />
           </button>
 
           <button className="flex flex-col items-center gap-1 px-6" style={{ color: 'var(--ink-4)' }}>
-            <History className="w-5 h-5" />
-            <span className="text-[10px] font-medium">Histórico</span>
+            <LogOut className="w-5 h-5" />
+            <span className="text-[10px] font-medium">Sair</span>
           </button>
         </div>
       </div>
 
       {/* ── Editor ──────────────────────────────────────────── */}
-      <div className={`flex flex-col flex-1 overflow-hidden ${!isEditing ? 'hidden md:flex' : 'flex'}`}>
-
+      <div className={`flex flex-col flex-1 overflow-hidden ${!isEditing ? 'hidden' : 'flex'}`}>
         {isEditing && (
           <div
             className="md:hidden flex items-center gap-3 px-4 py-3 border-b shrink-0"
@@ -121,7 +141,7 @@ export default function AppShell({ user, esbocos, pastas, children }: Props) {
           >
             <Link
               href="/esbocos"
-              className="flex items-center gap-2 text-sm font-semibold transition hover:opacity-70"
+              className="flex items-center gap-2 text-sm font-semibold"
               style={{ color: 'var(--brand)' }}
             >
               <ArrowLeft className="w-4 h-4" />
@@ -129,7 +149,6 @@ export default function AppShell({ user, esbocos, pastas, children }: Props) {
             </Link>
           </div>
         )}
-
         <main className="flex-1 flex flex-col overflow-hidden">
           {children}
         </main>
