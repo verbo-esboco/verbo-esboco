@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Loader2, Eye, EyeOff } from 'lucide-react'
+import Image from 'next/image'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -47,53 +48,59 @@ export default function LoginPage() {
   }
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center px-6"
-      style={{ background: 'var(--bg)' }}
-    >
-      <div className="w-full max-w-sm">
+    <div className="min-h-screen flex" style={{ background: 'var(--bg)' }}>
 
-        {/* Página de título */}
-        <div className="text-center mb-10">
-          <p className="text-[10px] tracking-[0.3em] uppercase mb-4" style={{ color: 'var(--ink-4)' }}>
-            Esboços Bíblicos
-          </p>
-          <h1
-            className="text-6xl font-bold tracking-tight mb-5"
-            style={{ fontFamily: 'var(--font-serif)', color: 'var(--ink-1)' }}
-          >
-            VERBO
-          </h1>
-          {/* Ornamento tipográfico */}
-          <div className="flex items-center justify-center gap-3">
-            <div className="h-px w-20" style={{ background: 'var(--line)' }} />
-            <div className="w-1.5 h-1.5 rotate-45" style={{ background: 'var(--gold)' }} />
-            <div className="h-px w-20" style={{ background: 'var(--line)' }} />
-          </div>
+      {/* Painel esquerdo — brand */}
+      <div
+        className="hidden lg:flex flex-col justify-between w-[420px] shrink-0 p-12"
+        style={{ background: 'var(--dark)', color: '#fff' }}
+      >
+        <div className="flex items-center gap-3">
+          <Image src="/verbo.png" alt="VERBO" width={40} height={40} className="object-contain" />
+          <span className="text-white font-bold text-lg tracking-tight">VERBO</span>
         </div>
 
-        {/* Card */}
-        <div
-          className="p-8"
-          style={{
-            background: 'var(--surface)',
-            border: '1px solid var(--line)',
-            boxShadow: 'var(--shadow-md)',
-          }}
-        >
-          <h2
-            className="text-[11px] font-semibold tracking-[0.2em] uppercase text-center mb-7"
-            style={{ color: 'var(--ink-4)' }}
-          >
-            {modo === 'entrar' ? 'Acessar conta' : 'Criar conta'}
-          </h2>
+        <div>
+          <p className="text-3xl font-bold leading-snug mb-4" style={{ fontFamily: 'var(--font-serif)' }}>
+            Suas mensagens,<br />
+            organizadas com<br />
+            <span style={{ color: 'var(--brand-bright)' }}>propósito.</span>
+          </p>
+          <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)' }}>
+            Do texto bíblico ao púlpito — em um só lugar.
+          </p>
+        </div>
+
+        <p className="text-xs" style={{ color: 'rgba(255,255,255,0.25)' }}>
+          Esboços Bíblicos
+        </p>
+      </div>
+
+      {/* Painel direito — form */}
+      <div className="flex-1 flex items-center justify-center px-6 py-12">
+        <div className="w-full max-w-sm">
+
+          {/* Logo mobile */}
+          <div className="flex items-center gap-3 mb-10 lg:hidden">
+            <Image src="/verbo.png" alt="VERBO" width={36} height={36} className="object-contain" />
+            <span className="font-bold text-lg tracking-tight" style={{ color: 'var(--ink-1)' }}>VERBO</span>
+          </div>
+
+          <h1 className="text-2xl font-bold mb-1" style={{ color: 'var(--ink-1)' }}>
+            {modo === 'entrar' ? 'Bem-vindo de volta' : 'Criar conta'}
+          </h1>
+          <p className="text-sm mb-8" style={{ color: 'var(--ink-4)' }}>
+            {modo === 'entrar'
+              ? 'Entre para acessar seus esboços'
+              : 'Comece a organizar suas pregações'}
+          </p>
 
           {/* Google */}
           <button
             onClick={handleGoogleLogin}
             disabled={loading}
-            className="w-full flex items-center justify-center gap-3 py-2.5 px-4 text-sm font-medium transition hover:bg-[var(--hover)] disabled:opacity-50 mb-6"
-            style={{ border: '1px solid var(--line)', color: 'var(--ink-2)' }}
+            className="w-full flex items-center justify-center gap-3 py-2.5 px-4 rounded-xl text-sm font-medium transition hover:bg-[var(--hover)] disabled:opacity-50 mb-5"
+            style={{ border: '1.5px solid var(--line)', color: 'var(--ink-1)', background: 'var(--surface)' }}
           >
             <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -104,15 +111,15 @@ export default function LoginPage() {
             Continuar com Google
           </button>
 
-          <div className="flex items-center gap-3 mb-6">
-            <div className="flex-1 h-px" style={{ background: 'var(--line-soft)' }} />
-            <span className="text-[10px] tracking-widest uppercase" style={{ color: 'var(--ink-4)' }}>ou</span>
-            <div className="flex-1 h-px" style={{ background: 'var(--line-soft)' }} />
+          <div className="flex items-center gap-3 mb-5">
+            <div className="flex-1 h-px" style={{ background: 'var(--line)' }} />
+            <span className="text-xs" style={{ color: 'var(--ink-4)' }}>ou</span>
+            <div className="flex-1 h-px" style={{ background: 'var(--line)' }} />
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-[10px] font-semibold tracking-[0.15em] uppercase mb-2" style={{ color: 'var(--ink-4)' }}>
+              <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--ink-3)' }}>
                 E-mail
               </label>
               <input
@@ -121,13 +128,19 @@ export default function LoginPage() {
                 onChange={e => setEmail(e.target.value)}
                 placeholder="seu@email.com"
                 required
-                className="w-full py-2 text-sm bg-transparent focus:outline-none transition"
-                style={{ borderBottom: '1px solid var(--line)', color: 'var(--ink-1)' }}
+                className="w-full py-2.5 px-3.5 text-sm rounded-xl focus:outline-none transition"
+                style={{
+                  border: '1.5px solid var(--line)',
+                  background: 'var(--surface)',
+                  color: 'var(--ink-1)',
+                }}
+                onFocus={e => (e.target.style.borderColor = 'var(--brand)')}
+                onBlur={e => (e.target.style.borderColor = 'var(--line)')}
               />
             </div>
 
             <div>
-              <label className="block text-[10px] font-semibold tracking-[0.15em] uppercase mb-2" style={{ color: 'var(--ink-4)' }}>
+              <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--ink-3)' }}>
                 Senha
               </label>
               <div className="relative">
@@ -138,36 +151,45 @@ export default function LoginPage() {
                   placeholder="••••••••"
                   required
                   minLength={6}
-                  className="w-full py-2 pr-8 text-sm bg-transparent focus:outline-none transition"
-                  style={{ borderBottom: '1px solid var(--line)', color: 'var(--ink-1)' }}
+                  className="w-full py-2.5 px-3.5 pr-11 text-sm rounded-xl focus:outline-none transition"
+                  style={{
+                    border: '1.5px solid var(--line)',
+                    background: 'var(--surface)',
+                    color: 'var(--ink-1)',
+                  }}
+                  onFocus={e => (e.target.style.borderColor = 'var(--brand)')}
+                  onBlur={e => (e.target.style.borderColor = 'var(--line)')}
                 />
                 <button
                   type="button"
                   onClick={() => setMostrar(!mostrarSenha)}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 transition hover:opacity-60"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 transition hover:opacity-60"
                   style={{ color: 'var(--ink-4)' }}
                 >
-                  {mostrarSenha ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                  {mostrarSenha ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
 
             {error && (
-              <p className="text-xs font-medium" style={{ color: 'var(--danger)' }}>{error}</p>
+              <p className="text-xs font-medium px-0.5" style={{ color: 'var(--danger)' }}>{error}</p>
             )}
 
             <button
               type="submit"
               disabled={loading || !email || !senha}
-              className="w-full py-3 mt-2 text-sm font-semibold text-white transition hover:opacity-80 disabled:opacity-50 flex items-center justify-center gap-2"
-              style={{ background: 'var(--brand)' }}
+              className="w-full py-2.5 mt-1 text-sm font-semibold text-white rounded-xl transition hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
+              style={{
+                background: 'var(--brand)',
+                boxShadow: 'var(--shadow-brand)',
+              }}
             >
-              {loading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+              {loading && <Loader2 className="w-4 h-4 animate-spin" />}
               {modo === 'entrar' ? 'Entrar' : 'Criar conta'}
             </button>
           </form>
 
-          <p className="text-center text-xs mt-5" style={{ color: 'var(--ink-4)' }}>
+          <p className="text-center text-sm mt-5" style={{ color: 'var(--ink-4)' }}>
             {modo === 'entrar' ? 'Não tem conta?' : 'Já tem conta?'}{' '}
             <button
               onClick={() => { setModo(modo === 'entrar' ? 'cadastrar' : 'entrar'); setError('') }}
@@ -178,10 +200,6 @@ export default function LoginPage() {
             </button>
           </p>
         </div>
-
-        <p className="text-center text-[11px] mt-6" style={{ color: 'var(--ink-4)' }}>
-          Seus esboços ficam salvos com segurança
-        </p>
       </div>
     </div>
   )

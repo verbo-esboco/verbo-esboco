@@ -7,15 +7,15 @@ import { usePathname } from 'next/navigation'
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import type { Esboco, Pasta } from '@/types'
-import { Search, Star, MoreVertical, Trash2, X } from 'lucide-react'
+import { Search, Star, MoreVertical, Trash2, X, FileText } from 'lucide-react'
 import { deleteEsboco, toggleFixado, updateEsboco } from '@/lib/actions'
 
 interface Props { esbocos: Esboco[]; pastas: Pasta[] }
 
 const STATUS = {
-  rascunho: { label: 'Rascunho', color: 'var(--ink-4)' },
-  pronto:   { label: 'Pronto',   color: 'var(--success)' },
-  pregado:  { label: 'Pregado',  color: 'var(--info)' },
+  rascunho: { label: 'Rascunho', color: '#A1A1AA',  bg: '#F4F4F5' },
+  pronto:   { label: 'Pronto',   color: '#16A34A',  bg: '#F0FDF4' },
+  pregado:  { label: 'Pregado',  color: '#2563EB',  bg: '#EFF6FF' },
 }
 
 export default function EsbocoList({ esbocos, pastas }: Props) {
@@ -58,11 +58,11 @@ export default function EsbocoList({ esbocos, pastas }: Props) {
   const filtroAtivo = pastaId ? `pasta:${pastaId}` : filtro
 
   const pills = [
-    { key: 'todos',    label: 'Todos',    href: '/esbocos' },
-    { key: 'fixados',  label: '★ Fixados', href: '/esbocos?filtro=fixados' },
-    { key: 'rascunho', label: 'Rascunho', href: '/esbocos?filtro=rascunho' },
-    { key: 'pronto',   label: 'Pronto',   href: '/esbocos?filtro=pronto' },
-    { key: 'pregado',  label: 'Pregado',  href: '/esbocos?filtro=pregado' },
+    { key: 'todos',    label: 'Todos',     href: '/esbocos' },
+    { key: 'fixados',  label: 'Fixados',   href: '/esbocos?filtro=fixados' },
+    { key: 'rascunho', label: 'Rascunho',  href: '/esbocos?filtro=rascunho' },
+    { key: 'pronto',   label: 'Pronto',    href: '/esbocos?filtro=pronto' },
+    { key: 'pregado',  label: 'Pregado',   href: '/esbocos?filtro=pregado' },
     ...pastas.map(p => ({ key: `pasta:${p.id}`, label: p.nome, href: `/esbocos?pasta=${p.id}` })),
   ]
 
@@ -70,10 +70,10 @@ export default function EsbocoList({ esbocos, pastas }: Props) {
     <div className="flex flex-col h-full" style={{ background: 'var(--surface)' }}>
 
       {/* Busca */}
-      <div className="px-4 pt-4 pb-3">
+      <div className="px-3 pt-3 pb-2">
         <div
-          className="flex items-center gap-2 px-3 py-2"
-          style={{ border: '1px solid var(--line)', background: 'var(--bg)' }}
+          className="flex items-center gap-2 px-3 py-2 rounded-lg"
+          style={{ border: '1.5px solid var(--line)', background: 'var(--bg)' }}
         >
           <Search className="w-3.5 h-3.5 shrink-0" style={{ color: 'var(--ink-4)' }} />
           <input
@@ -86,22 +86,22 @@ export default function EsbocoList({ esbocos, pastas }: Props) {
           />
           {search && (
             <button onClick={() => setSearch('')} style={{ color: 'var(--ink-4)' }}>
-              <X className="w-3 h-3" />
+              <X className="w-3.5 h-3.5" />
             </button>
           )}
         </div>
       </div>
 
       {/* Filtros */}
-      <div className="flex gap-1.5 px-4 pb-3 overflow-x-auto scrollbar-hide">
+      <div className="flex gap-1.5 px-3 pb-2 overflow-x-auto scrollbar-hide">
         {pills.map(p => (
           <Link
             key={p.key}
             href={p.href}
-            className="shrink-0 px-2.5 py-1 text-[10px] font-semibold tracking-wider uppercase transition whitespace-nowrap"
+            className="shrink-0 px-2.5 py-1 rounded-md text-xs font-medium transition whitespace-nowrap"
             style={filtroAtivo === p.key
               ? { background: 'var(--brand)', color: '#fff' }
-              : { color: 'var(--ink-4)', background: 'transparent' }
+              : { background: 'var(--bg)', color: 'var(--ink-3)' }
             }
           >
             {p.label}
@@ -110,100 +110,89 @@ export default function EsbocoList({ esbocos, pastas }: Props) {
       </div>
 
       {/* Contagem */}
-      <div
-        className="px-4 pb-2 border-b"
-        style={{ borderColor: 'var(--line-soft)' }}
-      >
-        <span className="text-[10px] tracking-wider uppercase" style={{ color: 'var(--ink-4)' }}>
+      <div className="px-3 pb-2">
+        <span className="text-[11px]" style={{ color: 'var(--ink-4)' }}>
           {filtrados.length} esboço{filtrados.length !== 1 ? 's' : ''}
         </span>
       </div>
 
       {/* Lista */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto px-2 pb-2 space-y-1">
         {filtrados.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full px-8 py-20 text-center">
-            {/* Ornamento vazio */}
-            <div className="flex items-center gap-3 mb-4 opacity-20">
-              <div className="h-px w-12" style={{ background: 'var(--ink-4)' }} />
-              <div className="w-1 h-1 rotate-45" style={{ background: 'var(--gold)' }} />
-              <div className="h-px w-12" style={{ background: 'var(--ink-4)' }} />
+          <div className="flex flex-col items-center justify-center h-full px-6 py-20 text-center">
+            <div
+              className="w-12 h-12 rounded-2xl flex items-center justify-center mb-3"
+              style={{ background: 'var(--bg)' }}
+            >
+              <FileText className="w-6 h-6" style={{ color: 'var(--ink-4)' }} />
             </div>
-            <p className="text-sm font-medium mb-1" style={{ color: 'var(--ink-3)', fontFamily: 'var(--font-serif)' }}>
+            <p className="text-sm font-semibold mb-1" style={{ color: 'var(--ink-2)' }}>
               {search ? 'Nenhum resultado' : 'Nenhum esboço ainda'}
             </p>
             <p className="text-xs leading-relaxed" style={{ color: 'var(--ink-4)' }}>
-              {search ? 'Tente buscar por outro termo' : 'Toque em + para criar seu primeiro esboço'}
+              {search ? 'Tente buscar por outro termo' : 'Toque em Novo para criar seu primeiro esboço'}
             </p>
           </div>
         ) : (
-          filtrados.map((esboco, idx) => {
+          filtrados.map(esboco => {
             const isActive = idAtual === esboco.id
+            const st = STATUS[esboco.status]
             return (
               <div key={esboco.id} className="relative group">
-                {/* Separador entre itens */}
-                {idx > 0 && (
-                  <div className="mx-4" style={{ height: '1px', background: 'var(--line-soft)' }} />
-                )}
                 <Link
                   href={`/esbocos/${esboco.id}`}
-                  className="block px-4 py-4 transition-colors"
+                  className="block rounded-xl p-3 transition-all"
                   style={isActive ? {
-                    background: 'var(--hover)',
-                    borderLeft: '2px solid var(--brand)',
-                    paddingLeft: '14px',
+                    background: 'rgba(234,88,12,0.06)',
+                    border: '1.5px solid rgba(234,88,12,0.25)',
                   } : {
-                    borderLeft: '2px solid transparent',
-                    paddingLeft: '14px',
+                    background: 'transparent',
+                    border: '1.5px solid transparent',
                   }}
+                  onMouseEnter={e => { if (!isActive) (e.currentTarget as HTMLElement).style.background = 'var(--bg)' }}
+                  onMouseLeave={e => { if (!isActive) (e.currentTarget as HTMLElement).style.background = 'transparent' }}
                 >
                   {/* Título + estrela */}
-                  <div className="flex items-start gap-2 mb-1">
-                    <p
-                      className="text-sm font-semibold leading-snug flex-1"
-                      style={{ color: 'var(--ink-1)', fontFamily: 'var(--font-serif)' }}
-                    >
+                  <div className="flex items-start gap-2 mb-0.5">
+                    <p className="text-sm font-semibold leading-snug flex-1 pr-5" style={{ color: 'var(--ink-1)' }}>
                       {esboco.titulo || 'Sem título'}
                     </p>
                     {esboco.fixado && (
-                      <Star className="w-3 h-3 shrink-0 mt-0.5" style={{ color: 'var(--gold)', fill: 'var(--gold)' }} />
+                      <Star className="w-3.5 h-3.5 shrink-0 mt-0.5" style={{ color: 'var(--brand)', fill: 'var(--brand)' }} />
                     )}
                   </div>
 
                   {/* Referência */}
                   {esboco.referencia_biblica && (
-                    <p className="text-xs mb-2" style={{ color: 'var(--brand-light)', fontStyle: 'italic' }}>
+                    <p className="text-xs font-medium mb-1.5" style={{ color: 'var(--brand)' }}>
                       {esboco.referencia_biblica}
                     </p>
                   )}
 
                   {/* Preview */}
-                  <p className="text-xs mb-3 leading-relaxed line-clamp-2" style={{ color: 'var(--ink-3)' }}>
+                  <p className="text-xs mb-2.5 leading-relaxed line-clamp-2" style={{ color: 'var(--ink-3)' }}>
                     {stripHtml(esboco.introducao) || 'Sem introdução...'}
                   </p>
 
                   {/* Meta */}
                   <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-1.5">
-                      <div
-                        className="w-1 h-1"
-                        style={{ background: STATUS[esboco.status].color }}
-                      />
-                      <span className="text-[10px] font-semibold tracking-wider uppercase" style={{ color: STATUS[esboco.status].color }}>
-                        {STATUS[esboco.status].label}
-                      </span>
-                    </div>
+                    <span
+                      className="text-[10px] font-semibold px-1.5 py-0.5 rounded-md"
+                      style={{ background: st.bg, color: st.color }}
+                    >
+                      {st.label}
+                    </span>
                     <span className="text-[10px] ml-auto" style={{ color: 'var(--ink-4)' }}>
                       {formatDistanceToNow(new Date(esboco.updated_at), { locale: ptBR, addSuffix: true })}
                     </span>
                   </div>
                 </Link>
 
-                {/* Menu de contexto */}
+                {/* Menu */}
                 <button
                   onClick={e => { e.preventDefault(); setMenu(menu === esboco.id ? null : esboco.id) }}
-                  className="absolute right-3 top-3.5 p-1.5 opacity-0 group-hover:opacity-100 transition"
-                  style={{ color: 'var(--ink-4)' }}
+                  className="absolute right-2 top-2.5 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition"
+                  style={{ background: 'var(--surface)', color: 'var(--ink-4)' }}
                 >
                   <MoreVertical className="w-3.5 h-3.5" />
                 </button>
@@ -212,44 +201,37 @@ export default function EsbocoList({ esbocos, pastas }: Props) {
                   <>
                     <div className="fixed inset-0 z-10" onClick={() => setMenu(null)} />
                     <div
-                      className="absolute right-3 top-9 z-20 py-1.5 w-44 overflow-hidden"
-                      style={{
-                        background: 'var(--surface)',
-                        border: '1px solid var(--line)',
-                        boxShadow: 'var(--shadow-md)',
-                      }}
+                      className="absolute right-2 top-9 z-20 rounded-xl py-1.5 w-48 overflow-hidden"
+                      style={{ background: 'var(--surface)', border: '1px solid var(--line)', boxShadow: 'var(--shadow-lg)' }}
                     >
                       <button
                         onClick={() => { startTransition(async () => { await toggleFixado(esboco.id, esboco.fixado) }); setMenu(null) }}
-                        className="w-full flex items-center gap-2.5 px-4 py-2 text-xs transition hover:bg-[var(--hover)]"
+                        className="w-full flex items-center gap-2.5 px-4 py-2 text-sm transition hover:bg-[var(--bg)]"
                         style={{ color: 'var(--ink-2)' }}
                       >
-                        <Star className="w-3.5 h-3.5" style={{ color: 'var(--gold)', fill: esboco.fixado ? 'var(--gold)' : 'none' }} />
+                        <Star className="w-3.5 h-3.5" style={{ color: 'var(--brand)', fill: esboco.fixado ? 'var(--brand)' : 'none' }} />
                         {esboco.fixado ? 'Desafixar' : 'Fixar'}
                       </button>
 
-                      <div className="my-1 mx-4" style={{ height: '1px', background: 'var(--line-soft)' }} />
-                      <p className="px-4 pb-1 pt-0.5 text-[9px] font-bold uppercase tracking-widest" style={{ color: 'var(--ink-4)' }}>Status</p>
+                      <div className="h-px mx-3 my-1" style={{ background: 'var(--line)' }} />
+                      <p className="px-4 py-1 text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--ink-4)' }}>Status</p>
 
                       {(['rascunho', 'pronto', 'pregado'] as const).map(s => (
                         <button
                           key={s}
                           onClick={() => { startTransition(async () => { await updateEsboco(esboco.id, { status: s }) }); setMenu(null) }}
-                          className="w-full flex items-center gap-2.5 px-4 py-1.5 text-xs transition hover:bg-[var(--hover)]"
-                          style={{
-                            color: esboco.status === s ? 'var(--brand)' : 'var(--ink-2)',
-                            fontWeight: esboco.status === s ? 600 : 400,
-                          }}
+                          className="w-full flex items-center gap-2.5 px-4 py-1.5 text-sm transition hover:bg-[var(--bg)]"
+                          style={{ color: esboco.status === s ? 'var(--brand)' : 'var(--ink-2)', fontWeight: esboco.status === s ? 600 : 400 }}
                         >
-                          <div className="w-1.5 h-1.5" style={{ background: STATUS[s].color }} />
+                          <div className="w-2 h-2 rounded-full" style={{ background: STATUS[s].color }} />
                           {STATUS[s].label}
                         </button>
                       ))}
 
-                      <div className="my-1 mx-4" style={{ height: '1px', background: 'var(--line-soft)' }} />
+                      <div className="h-px mx-3 my-1" style={{ background: 'var(--line)' }} />
                       <button
                         onClick={() => handleDelete(esboco.id)}
-                        className="w-full flex items-center gap-2.5 px-4 py-2 text-xs transition hover:bg-[var(--danger-bg)]"
+                        className="w-full flex items-center gap-2.5 px-4 py-2 text-sm transition hover:bg-[var(--danger-bg)]"
                         style={{ color: 'var(--danger)' }}
                       >
                         <Trash2 className="w-3.5 h-3.5" />

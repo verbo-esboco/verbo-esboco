@@ -8,6 +8,10 @@ const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfa
 export const metadata: Metadata = {
   title: 'VERBO – Esboços Bíblicos',
   description: 'Crie e organize seus esboços de pregações',
+  icons: {
+    icon: '/verbo.png',
+    apple: '/verbo.png',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
