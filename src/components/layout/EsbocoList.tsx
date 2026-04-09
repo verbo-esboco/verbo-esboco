@@ -75,7 +75,7 @@ export default function EsbocoList({ esbocos, pastas }: Props) {
       {/* Busca */}
       <div className="px-4 pt-4 pb-3">
         <div
-          className="flex items-center gap-2.5 px-4 py-2.5 rounded-full"
+          className="flex items-center gap-2.5 px-4 py-3 rounded-full"
           style={{ border: '1.5px solid var(--line)', background: 'var(--bg)' }}
         >
           <Search className="w-4 h-4 shrink-0" style={{ color: 'var(--ink-4)' }} />
@@ -101,7 +101,7 @@ export default function EsbocoList({ esbocos, pastas }: Props) {
           <Link
             key={p.key}
             href={p.href}
-            className="shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold transition whitespace-nowrap"
+            className="shrink-0 px-4 py-2 rounded-full text-xs font-semibold transition whitespace-nowrap"
             style={filtroAtivo === p.key
               ? { background: 'var(--brand)', color: '#fff', boxShadow: 'var(--shadow-brand)' }
               : { background: 'var(--bg)', color: 'var(--ink-3)', border: '1px solid var(--line)' }
@@ -211,7 +211,7 @@ export default function EsbocoList({ esbocos, pastas }: Props) {
                 {/* Menu */}
                 <button
                   onClick={e => { e.preventDefault(); setMenu(menu === esboco.id ? null : esboco.id) }}
-                  className="absolute right-4 top-3.5 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition"
+                  className="absolute right-3 top-3 p-2 rounded-lg opacity-0 group-hover:opacity-100 transition"
                   style={{ background: 'var(--surface)', color: 'var(--ink-4)' }}
                 >
                   <MoreVertical className="w-3.5 h-3.5" />

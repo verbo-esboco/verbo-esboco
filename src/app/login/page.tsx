@@ -99,7 +99,7 @@ export default function LoginPage() {
           <button
             onClick={handleGoogleLogin}
             disabled={loading}
-            className="w-full flex items-center justify-center gap-3 py-2.5 px-4 rounded-xl text-sm font-medium transition hover:bg-[var(--hover)] disabled:opacity-50 mb-5"
+            className="w-full flex items-center justify-center gap-3 py-3 px-5 rounded-xl text-sm font-medium transition hover:bg-[var(--hover)] disabled:opacity-50 mb-5"
             style={{ border: '1.5px solid var(--line)', color: 'var(--ink-1)', background: 'var(--surface)' }}
           >
             <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
@@ -178,7 +178,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading || !email || !senha}
-              className="w-full py-2.5 mt-1 text-sm font-semibold text-white rounded-xl transition hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
+              className="w-full py-3.5 mt-1 text-sm font-semibold text-white rounded-xl transition hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
               style={{
                 background: 'var(--brand)',
                 boxShadow: 'var(--shadow-brand)',

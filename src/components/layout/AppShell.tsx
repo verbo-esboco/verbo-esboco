@@ -56,16 +56,16 @@ export default function AppShell({ user, esbocos, pastas, children }: Props) {
             <button
               onClick={handleNovo}
               disabled={isPending}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-semibold text-white transition hover:opacity-90 active:scale-95 disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold text-white transition hover:opacity-90 active:scale-95 disabled:opacity-50"
               style={{ background: 'var(--brand)', boxShadow: 'var(--shadow-brand)' }}
             >
-              <Plus className="w-3.5 h-3.5" />
+              <Plus className="w-4 h-4" />
               Novo
             </button>
             <form action={signOut}>
               <button
                 type="submit"
-                className="w-8 h-8 flex items-center justify-center rounded-full transition hover:bg-[var(--bg)]"
+                className="w-9 h-9 flex items-center justify-center rounded-full transition hover:bg-[var(--bg)]"
                 style={{ color: 'var(--ink-4)' }}
                 title="Sair"
               >

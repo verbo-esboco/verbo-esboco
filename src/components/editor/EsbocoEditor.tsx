@@ -162,7 +162,7 @@ export default function EsbocoEditor({ esboco: inicial, pastas }: Props) {
             <button
               onClick={handleToggleFixado}
               title={dados.fixado ? 'Desafixar' : 'Fixar'}
-              className="w-8 h-8 flex items-center justify-center rounded-full transition hover:bg-[var(--bg)]"
+              className="w-9 h-9 flex items-center justify-center rounded-full transition hover:bg-[var(--bg)]"
               style={{ color: dados.fixado ? 'var(--brand)' : 'var(--ink-4)' }}
             >
               <Star className="w-4 h-4" style={{ fill: dados.fixado ? 'var(--brand)' : 'none' }} />
@@ -172,7 +172,7 @@ export default function EsbocoEditor({ esboco: inicial, pastas }: Props) {
             <div className="relative">
               <button
                 onClick={() => { setStatusMenu(!statusMenu); setPastaMenu(false) }}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition hover:opacity-80"
+                className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold transition hover:opacity-80"
                 style={{ background: statusAtual.bg, color: statusAtual.color }}
               >
                 <StatusIcon className="w-3.5 h-3.5" />
@@ -208,7 +208,7 @@ export default function EsbocoEditor({ esboco: inicial, pastas }: Props) {
             <div className="relative">
               <button
                 onClick={() => { setPastaMenu(!pastaMenu); setStatusMenu(false) }}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition hover:bg-[var(--bg)]"
+                className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium transition hover:bg-[var(--bg)]"
                 style={{ color: 'var(--ink-3)', border: '1px solid var(--line)' }}
               >
                 <FolderOpen className="w-3.5 h-3.5" style={{ color: pasta?.cor ?? 'var(--ink-4)' }} />
@@ -247,7 +247,7 @@ export default function EsbocoEditor({ esboco: inicial, pastas }: Props) {
             {/* Púlpito */}
             <button
               onClick={() => setModoPulpito(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-white transition hover:opacity-90"
+              className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold text-white transition hover:opacity-90"
               style={{ background: 'var(--dark)' }}
             >
               <MonitorPlay className="w-3.5 h-3.5" />
@@ -258,7 +258,7 @@ export default function EsbocoEditor({ esboco: inicial, pastas }: Props) {
             <div className="relative">
               <button
                 onClick={() => setMenuAberto(!menuAberto)}
-                className="w-8 h-8 flex items-center justify-center rounded-full transition hover:bg-[var(--bg)]"
+                className="w-9 h-9 flex items-center justify-center rounded-full transition hover:bg-[var(--bg)]"
                 style={{ color: 'var(--ink-4)' }}
               >
                 <MoreVertical className="w-4 h-4" />
