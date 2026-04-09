@@ -7,13 +7,15 @@ export default function EsbocosPage() {
       style={{ background: 'var(--bg)' }}
     >
       <div className="text-center max-w-xs px-8">
-        <div className="flex justify-center mb-5 opacity-30">
-          <Image src="/verbo.png" alt="VERBO" width={48} height={48} className="object-contain" />
+        <div className="flex justify-center mb-5">
+          <div
+            className="w-20 h-20 rounded-3xl flex items-center justify-center"
+            style={{ background: 'var(--surface)', border: '1px solid var(--line)', boxShadow: 'var(--shadow-md)' }}
+          >
+            <Image src="/verbo.png" alt="VERBO" width={48} height={48} className="object-contain opacity-60" />
+          </div>
         </div>
-        <h2
-          className="text-xl font-bold mb-2"
-          style={{ fontFamily: 'var(--font-serif)', color: 'var(--ink-1)' }}
-        >
+        <h2 className="text-xl font-bold mb-2" style={{ color: 'var(--ink-1)' }}>
           Selecione um esboço
         </h2>
         <p className="text-sm leading-relaxed" style={{ color: 'var(--ink-4)' }}>
