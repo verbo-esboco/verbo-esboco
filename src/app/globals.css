@@ -1,73 +1,91 @@
 @import "tailwindcss";
 
 :root {
-  /* Brand */
-  --brand: #C8531A;
-  --brand-hover: #A8420F;
-  --brand-light: #FDF0EB;
-  --brand-muted: rgba(200, 83, 26, 0.12);
+  /* Brand — Forest Green (lombada de Bíblia de couro) */
+  --brand:         #1C4532;
+  --brand-mid:     #2D6A4F;
+  --brand-light:   #40916C;
+  --brand-muted:   rgba(28, 69, 50, 0.10);
+  --brand-muted-2: rgba(28, 69, 50, 0.05);
 
-  /* Surfaces — warm manuscript palette */
-  --canvas:    #F7F5F2;
-  --sidebar:   #F0EDE8;
-  --surface:   #FFFFFF;
-  --hover:     #EDE9E3;
-  --active:    #E8E2D9;
+  /* Accent — Brass/Gold (iluminura) */
+  --gold:          #B07D2A;
+  --gold-2:        #C9922E;
+  --gold-muted:    rgba(176, 125, 42, 0.12);
 
-  /* Ink — text hierarchy */
-  --ink-1: #1A120B;
-  --ink-2: #4A3C33;
-  --ink-3: #8C7B6E;
-  --ink-4: #C4B5A8;
+  /* Surfaces — Parchment */
+  --bg:            #F5F0E8;
+  --surface:       #FDFCF9;
+  --surface-2:     #F9F4EA;
+  --hover:         #EDE7D5;
+  --active:        #E3D9C5;
 
-  /* Lines */
-  --line:      rgba(100, 75, 55, 0.10);
-  --line-soft: rgba(100, 75, 55, 0.06);
+  /* Text — Warm Ink */
+  --ink-1:         #1C1812;
+  --ink-2:         #3D3526;
+  --ink-3:         #7A6E5E;
+  --ink-4:         #A89880;
+
+  /* Lines — Sepia */
+  --line:          #D4C5A9;
+  --line-soft:     rgba(212, 197, 169, 0.5);
 
   /* Semantic */
-  --success: #2D6A4F;
-  --success-bg: #EAF3EE;
-  --warning: #92620A;
-  --warning-bg: #FDF5E6;
-  --info: #1D4E89;
-  --info-bg: #EBF2FA;
+  --success:       #2D6A4F;
+  --success-bg:    #EBF5F0;
+  --warning:       #B07D2A;
+  --warning-bg:    #FBF3E4;
+  --info:          #1E4D7B;
+  --info-bg:       #EBF2F9;
+  --danger:        #8B1A2A;
+  --danger-bg:     #FAF0F1;
 
-  /* Status */
-  --status-rascunho: var(--ink-3);
-  --status-pronto:   var(--success);
-  --status-pregado:  var(--info);
+  /* Shadows — Warm sepia, low-contrast */
+  --shadow-sm:     0 1px 3px rgba(28,24,18,0.07), 0 1px 2px rgba(28,24,18,0.04);
+  --shadow-md:     0 4px 16px rgba(28,24,18,0.09), 0 2px 6px rgba(28,24,18,0.05);
+  --shadow-lg:     0 8px 32px rgba(28,24,18,0.11), 0 2px 8px rgba(28,24,18,0.06);
+  --shadow-fab:    0 4px 24px rgba(28,69,50,0.38), 0 1px 6px rgba(28,24,18,0.14);
 
   /* Fonts */
-  --font-sans: var(--font-inter), system-ui, sans-serif;
-  --font-serif: var(--font-playfair), Georgia, serif;
+  --font-sans:     var(--font-inter), system-ui, sans-serif;
+  --font-serif:    var(--font-playfair), Georgia, serif;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
 
 body {
   font-family: var(--font-sans);
-  background: var(--canvas);
+  background: var(--bg);
   color: var(--ink-1);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--line); border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(100, 75, 55, 0.2); }
+/* Placeholder global */
+::placeholder { color: var(--ink-4); opacity: 1; }
 
-/* ── Tiptap editor ─────────────────────────────────────── */
+/* Legacy gradient classes — now solid */
+.brand-gradient { background: var(--brand); }
+.hero-gradient  { background: var(--brand); }
+.gold-gradient  { background: var(--gold); }
+
+/* Scrollbar */
+::-webkit-scrollbar        { width: 4px; height: 4px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: rgba(212,197,169,0.7); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(176,125,42,0.3); }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Tiptap ────────────────────────────────────────────── */
 .tiptap {
   outline: none;
   min-height: 80px;
   color: var(--ink-1);
   font-size: 0.9375rem;
-  line-height: 1.7;
+  line-height: 1.75;
 }
-
 .tiptap p.is-editor-empty:first-child::before {
   color: var(--ink-4);
   content: attr(data-placeholder);
@@ -75,42 +93,16 @@ body {
   height: 0;
   pointer-events: none;
 }
-
-.tiptap ul  { list-style: disc; padding-left: 1.4rem; }
+.tiptap ul  { list-style: disc;    padding-left: 1.4rem; }
 .tiptap ol  { list-style: decimal; padding-left: 1.4rem; }
-.tiptap li  { margin-bottom: 0.2rem; }
-
-.tiptap h1 {
-  font-family: var(--font-serif);
-  font-size: 1.5rem;
-  font-weight: 700;
-  line-height: 1.25;
-  color: var(--ink-1);
-  margin-bottom: 0.5rem;
-}
-.tiptap h2 {
-  font-family: var(--font-serif);
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--ink-1);
-  margin-bottom: 0.4rem;
-}
-.tiptap h3 {
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--ink-2);
-  margin-bottom: 0.3rem;
-}
-.tiptap blockquote {
-  border-left: 2px solid var(--brand);
-  padding-left: 1rem;
-  color: var(--ink-3);
-  font-style: italic;
-  margin: 0.75rem 0;
-}
+.tiptap li  { margin-bottom: 0.25rem; }
+.tiptap h1  { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 700; line-height: 1.25; color: var(--ink-1); margin-bottom: 0.5rem; }
+.tiptap h2  { font-family: var(--font-serif); font-size: 1.2rem; font-weight: 600; color: var(--ink-1); margin-bottom: 0.4rem; }
+.tiptap h3  { font-size: 1.05rem; font-weight: 600; color: var(--ink-2); margin-bottom: 0.3rem; }
+.tiptap blockquote { border-left: 2px solid var(--line); padding-left: 1rem; color: var(--ink-3); font-style: italic; margin: 0.75rem 0; }
 .tiptap strong { font-weight: 700; }
 .tiptap em     { font-style: italic; color: var(--ink-2); }
-.tiptap u      { text-decoration: underline; text-decoration-color: var(--brand); }
+.tiptap u      { text-decoration: underline; text-decoration-color: var(--gold); }
 .tiptap p      { margin-bottom: 0.4rem; }
 
 /* ── Modo Púlpito ──────────────────────────────────────── */
@@ -121,12 +113,12 @@ body {
 .pulpito-content h3        { font-size: 1.1rem; font-weight: 600; color: rgba(255,255,255,.85); margin-bottom: 0.5rem; }
 .pulpito-content strong    { color: #fff; font-weight: 700; }
 .pulpito-content em        { color: rgba(255,255,255,.75); font-style: italic; }
-.pulpito-content u         { text-decoration: underline; text-decoration-color: #C8531A; }
-.pulpito-content ul        { list-style: disc; padding-left: 1.5rem; margin-bottom: 0.75rem; }
+.pulpito-content u         { text-decoration: underline; text-decoration-color: var(--gold); }
+.pulpito-content ul        { list-style: disc;    padding-left: 1.5rem; margin-bottom: 0.75rem; }
 .pulpito-content ol        { list-style: decimal; padding-left: 1.5rem; margin-bottom: 0.75rem; }
 .pulpito-content li        { margin-bottom: 0.4rem; }
 .pulpito-content blockquote {
-  border-left: 2px solid #C8531A;
+  border-left: 2px solid rgba(176, 125, 42, 0.5);
   padding-left: 1rem;
   color: rgba(255,255,255,.55);
   font-style: italic;
