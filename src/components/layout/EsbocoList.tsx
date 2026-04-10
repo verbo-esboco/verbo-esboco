@@ -16,9 +16,9 @@ import { deleteEsboco, toggleFixado, updateEsboco } from '@/lib/actions'
 interface Props { esbocos: Esboco[]; pastas: Pasta[]; compacto?: boolean }
 
 const STATUS = {
-  rascunho: { label: 'Em edição', icon: Pencil,       color: '#92400E', bg: '#FEF3C7', dot: '#D97706' },
-  pronto:   { label: 'Pronto',    icon: CheckCircle2, color: '#166534', bg: '#DCFCE7', dot: '#16A34A' },
-  pregado:  { label: 'Pregado',   icon: Mic2,         color: '#1E40AF', bg: '#DBEAFE', dot: '#2563EB' },
+  rascunho: { label: 'Em edição', icon: Pencil,       color: '#92400E', bg: '#FEF3C7' },
+  pronto:   { label: 'Pronto',    icon: CheckCircle2, color: '#166534', bg: '#DCFCE7' },
+  pregado:  { label: 'Pregado',   icon: Mic2,         color: '#1E40AF', bg: '#DBEAFE' },
 }
 
 export default function EsbocoList({ esbocos, pastas, compacto = false }: Props) {
@@ -69,30 +69,30 @@ export default function EsbocoList({ esbocos, pastas, compacto = false }: Props)
     ...pastas.map(p => ({ key: `pasta:${p.id}`, label: p.nome, href: `/esbocos?pasta=${p.id}` })),
   ]
 
-  const px = compacto ? 'px-4' : 'px-6'
+  const px = compacto ? 'px-5' : 'px-8'
   const maxW = compacto ? '' : 'max-w-xl mx-auto w-full'
 
   return (
     <div className="flex flex-col h-full" style={{ background: 'var(--surface)' }}>
 
       {/* Busca */}
-      <div className={`${px} pt-5 pb-3`}>
+      <div className={`${px} pt-5 pb-4`}>
         <div className={maxW}>
           <div
-            className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl"
-            style={{ border: '1px solid var(--line)', background: 'var(--bg)' }}
+            className="flex items-center gap-2"
+            style={{ borderBottom: '1px solid var(--line)', paddingBottom: '8px' }}
           >
             <Search className="w-3.5 h-3.5 shrink-0" style={{ color: 'var(--ink-4)' }} />
             <input
               type="text"
-              placeholder="Buscar por tema, livro ou palavra-chave…"
+              placeholder="Buscar…"
               value={search}
               onChange={e => setSearch(e.target.value)}
               className="flex-1 text-sm bg-transparent focus:outline-none"
-              style={{ color: 'var(--ink-1)' }}
+              style={{ color: 'var(--ink-1)', fontFamily: 'var(--font-sans)' }}
             />
             {search && (
-              <button onClick={() => setSearch('')} className="p-0.5" style={{ color: 'var(--ink-4)' }}>
+              <button onClick={() => setSearch('')} style={{ color: 'var(--ink-4)' }}>
                 <X className="w-3 h-3" />
               </button>
             )}
@@ -101,17 +101,20 @@ export default function EsbocoList({ esbocos, pastas, compacto = false }: Props)
       </div>
 
       {/* Filtros */}
-      <div className={`${px} pb-4 overflow-x-auto scrollbar-hide`}>
-        <div className={`flex gap-1.5 ${maxW}`}>
+      <div className={`${px} pb-5 overflow-x-auto scrollbar-hide`}>
+        <div className={`flex gap-4 ${maxW}`}>
           {pills.map(p => (
             <Link
               key={p.key}
               href={p.href}
-              className="shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-medium transition whitespace-nowrap"
-              style={filtroAtivo === p.key
-                ? { background: 'var(--brand)', color: '#fff' }
-                : { background: 'transparent', color: 'var(--ink-3)' }
-              }
+              className="shrink-0 text-xs transition whitespace-nowrap"
+              style={{
+                color: filtroAtivo === p.key ? 'var(--ink-1)' : 'var(--ink-4)',
+                fontWeight: filtroAtivo === p.key ? 700 : 400,
+                textDecoration: filtroAtivo === p.key ? 'underline' : 'none',
+                textUnderlineOffset: '3px',
+                letterSpacing: '0.03em',
+              }}
             >
               {p.label}
             </Link>
@@ -119,21 +122,21 @@ export default function EsbocoList({ esbocos, pastas, compacto = false }: Props)
         </div>
       </div>
 
-      {/* Lista */}
-      <div className={`flex-1 overflow-y-auto ${px} pb-6`}>
-        <div className={`${maxW} flex flex-col gap-px`}>
+      {/* Divisor */}
+      <div className={px} style={{ marginBottom: '0' }}>
+        <div className={maxW} style={{ borderTop: '1px solid var(--line)' }} />
+      </div>
+
+      {/* Lista estilo Radcliffe — entradas editoriais */}
+      <div className={`flex-1 overflow-y-auto ${px} pb-8`}>
+        <div className={maxW}>
           {filtrados.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-24 text-center">
-              <div
-                className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
-                style={{ background: 'var(--bg)', border: '1px solid var(--line)' }}
-              >
-                <FileText className="w-6 h-6" style={{ color: 'var(--ink-4)' }} />
-              </div>
-              <p className="text-sm font-semibold mb-1.5" style={{ color: 'var(--ink-2)' }}>
+              <FileText className="w-6 h-6 mb-4" style={{ color: 'var(--ink-4)' }} />
+              <p className="text-sm font-semibold mb-1" style={{ color: 'var(--ink-2)', fontFamily: 'var(--font-serif)' }}>
                 {search ? 'Nenhum resultado' : 'Nenhum esboço ainda'}
               </p>
-              <p className="text-xs leading-relaxed" style={{ color: 'var(--ink-4)' }}>
+              <p className="text-xs" style={{ color: 'var(--ink-4)' }}>
                 {search ? 'Tente buscar por outro termo' : 'Clique em Novo para criar seu primeiro esboço'}
               </p>
             </div>
@@ -144,86 +147,75 @@ export default function EsbocoList({ esbocos, pastas, compacto = false }: Props)
               const StatusIcon = st.icon
 
               return (
-                <div key={esboco.id} className="relative group">
+                <div
+                  key={esboco.id}
+                  className="relative group"
+                  style={{ borderBottom: '1px solid var(--line)' }}
+                >
                   <Link
                     href={`/esbocos/${esboco.id}`}
                     className="block transition-colors"
-                    style={{
-                      padding: compacto ? '12px 14px' : '14px 16px',
-                      background: isActive ? 'var(--hover)' : 'transparent',
-                      borderRadius: '10px',
-                    }}
-                    onMouseEnter={e => {
-                      if (!isActive) (e.currentTarget as HTMLElement).style.background = 'var(--bg)'
-                    }}
-                    onMouseLeave={e => {
-                      if (!isActive) (e.currentTarget as HTMLElement).style.background = 'transparent'
-                    }}
+                    style={{ padding: compacto ? '14px 0' : '20px 0' }}
                   >
-                    {/* Indicador ativo */}
-                    {isActive && (
-                      <div
-                        className="absolute left-0 top-2 bottom-2 w-0.5 rounded-full"
-                        style={{ background: 'var(--brand)' }}
-                      />
-                    )}
-
-                    {/* Título + status */}
-                    <div className="flex items-start justify-between gap-2 mb-1.5">
-                      <p
-                        className="font-semibold leading-snug flex-1 min-w-0"
-                        style={{
-                          color: isActive ? 'var(--ink-1)' : 'var(--ink-2)',
-                          fontSize: compacto ? '0.8125rem' : '0.875rem',
-                        }}
+                    {/* Meta superior — data + status */}
+                    <div className="flex items-center gap-3 mb-1.5">
+                      <span
+                        className="uppercase tracking-widest"
+                        style={{ fontSize: '0.65rem', color: 'var(--ink-4)', letterSpacing: '0.1em' }}
                       >
-                        {esboco.titulo || 'Sem título'}
-                      </p>
-                      <div className="flex items-center gap-1.5 shrink-0">
-                        {esboco.fixado && (
-                          <Star className="w-3 h-3" style={{ color: 'var(--brand)', fill: 'var(--brand)' }} />
-                        )}
-                        <span
-                          className="flex items-center gap-1 rounded-md font-medium"
-                          style={{
-                            background: st.bg,
-                            color: st.color,
-                            fontSize: '10px',
-                            padding: '2px 7px',
-                          }}
-                        >
-                          <StatusIcon className="w-2.5 h-2.5" />
-                          {st.label}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Meta */}
-                    <div className="flex items-center gap-3 flex-wrap">
-                      {esboco.referencia_biblica && (
-                        <span
-                          className="flex items-center gap-1 text-xs font-medium"
-                          style={{ color: 'var(--brand)' }}
-                        >
-                          <BookOpen className="w-3 h-3 shrink-0" />
-                          {esboco.referencia_biblica}
-                        </span>
-                      )}
-                      <span className="text-xs" style={{ color: 'var(--ink-4)' }}>
                         {format(new Date(esboco.updated_at), "d MMM yyyy", { locale: ptBR })}
                       </span>
+                      <span
+                        className="uppercase tracking-widest"
+                        style={{
+                          fontSize: '0.65rem',
+                          color: st.color,
+                          letterSpacing: '0.1em',
+                          fontWeight: 600,
+                        }}
+                      >
+                        {st.label}
+                      </span>
+                      {esboco.fixado && (
+                        <Star className="w-2.5 h-2.5" style={{ color: 'var(--brand)', fill: 'var(--brand)' }} />
+                      )}
                     </div>
+
+                    {/* Título — protagonista */}
+                    <h2
+                      className="leading-snug mb-1.5"
+                      style={{
+                        fontFamily: 'var(--font-serif)',
+                        fontSize: compacto ? '0.9375rem' : '1.0625rem',
+                        fontWeight: 700,
+                        color: isActive ? 'var(--brand)' : 'var(--ink-1)',
+                        letterSpacing: '-0.01em',
+                      }}
+                    >
+                      {esboco.titulo || 'Sem título'}
+                    </h2>
+
+                    {/* Referência */}
+                    {esboco.referencia_biblica && (
+                      <p
+                        className="flex items-center gap-1"
+                        style={{ fontSize: '0.8125rem', color: 'var(--ink-3)', fontStyle: 'italic' }}
+                      >
+                        <BookOpen className="w-3 h-3 shrink-0" style={{ color: 'var(--ink-4)' }} />
+                        {esboco.referencia_biblica}
+                      </p>
+                    )}
 
                     {/* Tags */}
                     {esboco.tags?.length > 0 && (
-                      <div className="flex flex-wrap gap-1 mt-2">
+                      <div className="flex flex-wrap gap-2 mt-2">
                         {esboco.tags.map(tag => (
                           <span
                             key={tag}
-                            className="px-2 py-0.5 rounded-md text-xs"
-                            style={{ background: 'var(--surface-2)', color: 'var(--ink-3)' }}
+                            className="uppercase tracking-widest"
+                            style={{ fontSize: '0.6rem', color: 'var(--ink-4)', letterSpacing: '0.1em' }}
                           >
-                            {tag}
+                            #{tag}
                           </span>
                         ))}
                       </div>
@@ -233,8 +225,8 @@ export default function EsbocoList({ esbocos, pastas, compacto = false }: Props)
                   {/* Menu de contexto */}
                   <button
                     onClick={e => { e.preventDefault(); setMenu(menu === esboco.id ? null : esboco.id) }}
-                    className="absolute right-2 top-2 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition"
-                    style={{ background: 'var(--surface)', boxShadow: 'var(--shadow-sm)', color: 'var(--ink-3)' }}
+                    className="absolute right-0 top-1/2 -translate-y-1/2 p-1.5 opacity-0 group-hover:opacity-100 transition"
+                    style={{ color: 'var(--ink-4)' }}
                   >
                     <MoreVertical className="w-3.5 h-3.5" />
                   </button>
@@ -243,20 +235,24 @@ export default function EsbocoList({ esbocos, pastas, compacto = false }: Props)
                     <>
                       <div className="fixed inset-0 z-10" onClick={() => setMenu(null)} />
                       <div
-                        className="absolute right-2 top-10 z-20 rounded-xl py-1.5 w-52 overflow-hidden"
-                        style={{ background: 'var(--surface)', border: '1px solid var(--line)', boxShadow: 'var(--shadow-lg)' }}
+                        className="absolute right-0 top-1/2 -translate-y-1/2 z-20 py-1 w-48 overflow-hidden"
+                        style={{
+                          background: 'var(--surface)',
+                          border: '1px solid var(--line)',
+                          boxShadow: 'var(--shadow-md)',
+                        }}
                       >
                         <button
                           onClick={() => { startTransition(async () => { await toggleFixado(esboco.id, esboco.fixado) }); setMenu(null) }}
-                          className="w-full flex items-center gap-3 px-4 py-2 text-sm transition hover:bg-[var(--bg)]"
-                          style={{ color: 'var(--ink-2)' }}
+                          className="w-full flex items-center gap-3 px-4 py-2 text-xs transition hover:bg-[var(--hover)]"
+                          style={{ color: 'var(--ink-2)', letterSpacing: '0.02em' }}
                         >
-                          <Star className="w-3.5 h-3.5" style={{ color: 'var(--brand)', fill: esboco.fixado ? 'var(--brand)' : 'none' }} />
+                          <Star className="w-3 h-3" style={{ color: 'var(--brand)', fill: esboco.fixado ? 'var(--brand)' : 'none' }} />
                           {esboco.fixado ? 'Desafixar' : 'Fixar'}
                         </button>
 
                         <div className="h-px mx-3 my-1" style={{ background: 'var(--line)' }} />
-                        <p className="px-4 pt-0.5 pb-1 text-[10px] font-semibold uppercase tracking-widest" style={{ color: 'var(--ink-4)' }}>
+                        <p className="px-4 pb-1 pt-0.5 uppercase tracking-widest" style={{ fontSize: '0.6rem', color: 'var(--ink-4)' }}>
                           Status
                         </p>
 
@@ -267,16 +263,15 @@ export default function EsbocoList({ esbocos, pastas, compacto = false }: Props)
                             <button
                               key={s}
                               onClick={() => { startTransition(async () => { await updateEsboco(esboco.id, { status: s }) }); setMenu(null) }}
-                              className="w-full flex items-center gap-2.5 px-4 py-2 text-sm transition hover:bg-[var(--bg)]"
-                              style={{ color: esboco.status === s ? 'var(--brand)' : 'var(--ink-2)', fontWeight: esboco.status === s ? 600 : 400 }}
+                              className="w-full flex items-center gap-2.5 px-4 py-2 text-xs transition hover:bg-[var(--hover)]"
+                              style={{
+                                color: esboco.status === s ? 'var(--ink-1)' : 'var(--ink-3)',
+                                fontWeight: esboco.status === s ? 700 : 400,
+                                letterSpacing: '0.02em',
+                              }}
                             >
-                              <span
-                                className="flex items-center gap-1.5 rounded-md text-xs font-medium px-2 py-0.5"
-                                style={{ background: S.bg, color: S.color }}
-                              >
-                                <Icon className="w-2.5 h-2.5" />
-                                {S.label}
-                              </span>
+                              <Icon className="w-3 h-3" />
+                              {S.label}
                             </button>
                           )
                         })}
@@ -284,11 +279,11 @@ export default function EsbocoList({ esbocos, pastas, compacto = false }: Props)
                         <div className="h-px mx-3 my-1" style={{ background: 'var(--line)' }} />
                         <button
                           onClick={() => handleDelete(esboco.id)}
-                          className="w-full flex items-center gap-3 px-4 py-2 text-sm transition hover:bg-[var(--danger-bg)]"
-                          style={{ color: 'var(--danger)' }}
+                          className="w-full flex items-center gap-2.5 px-4 py-2 text-xs transition hover:bg-[var(--danger-bg)]"
+                          style={{ color: 'var(--danger)', letterSpacing: '0.02em' }}
                         >
-                          <Trash2 className="w-3.5 h-3.5" />
-                          Excluir esboço
+                          <Trash2 className="w-3 h-3" />
+                          Excluir
                         </button>
                       </div>
                     </>

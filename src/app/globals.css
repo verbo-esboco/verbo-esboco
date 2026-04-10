@@ -1,33 +1,33 @@
 @import "tailwindcss";
 
 :root {
-  /* Brand — Brick Orange */
+  /* Brand — deep brick (usado cirurgicamente) */
   --brand:         #C8470A;
   --brand-light:   #E05A14;
   --brand-bright:  #F07038;
-  --brand-muted:   rgba(200, 71, 10, 0.09);
+  --brand-muted:   rgba(200, 71, 10, 0.08);
   --brand-muted-2: rgba(200, 71, 10, 0.04);
 
   /* Dark */
-  --dark:          #0E0D0B;
-  --dark-2:        #1C1A16;
+  --dark:          #111111;
+  --dark-2:        #222222;
 
-  /* Surfaces — warm cream */
-  --bg:            #F7F4EE;
-  --surface:       #FEFCF9;
-  --surface-2:     #EDE9E1;
-  --hover:         #F2EEE7;
-  --active:        #E9E5DD;
+  /* Surfaces — branco editorial */
+  --bg:            #FFFFFF;
+  --surface:       #FFFFFF;
+  --surface-2:     #F5F5F5;
+  --hover:         #F8F8F8;
+  --active:        #F0F0F0;
 
-  /* Text — warm neutrals */
-  --ink-1:         #1A1814;
-  --ink-2:         #3A3830;
-  --ink-3:         #6C6A63;
-  --ink-4:         #A09D97;
+  /* Text */
+  --ink-1:         #111111;
+  --ink-2:         #333333;
+  --ink-3:         #757575;
+  --ink-4:         #AAAAAA;
 
-  /* Lines — warm */
-  --line:          #E0DBD1;
-  --line-soft:     #EAE7DF;
+  /* Lines — delicadas */
+  --line:          #E8E8E8;
+  --line-soft:     #F0F0F0;
 
   /* Semantic */
   --success:       #166534;
@@ -39,13 +39,13 @@
   --danger:        #991B1B;
   --danger-bg:     #FEF2F2;
 
-  /* Shadows — warm & soft */
-  --shadow-xs:     0 1px 3px rgba(10,8,4,0.07);
-  --shadow-sm:     0 2px 6px rgba(10,8,4,0.08), 0 1px 2px rgba(10,8,4,0.04);
-  --shadow-md:     0 6px 20px rgba(10,8,4,0.08), 0 2px 6px rgba(10,8,4,0.04);
-  --shadow-lg:     0 12px 40px rgba(10,8,4,0.10), 0 4px 12px rgba(10,8,4,0.05);
-  --shadow-fab:    0 6px 24px rgba(200,71,10,0.50), 0 2px 8px rgba(200,71,10,0.25);
-  --shadow-brand:  0 2px 12px rgba(200,71,10,0.38);
+  /* Shadows — quase nenhuma */
+  --shadow-xs:     0 1px 2px rgba(0,0,0,0.04);
+  --shadow-sm:     0 1px 4px rgba(0,0,0,0.06);
+  --shadow-md:     0 4px 16px rgba(0,0,0,0.06);
+  --shadow-lg:     0 8px 32px rgba(0,0,0,0.08);
+  --shadow-fab:    0 4px 20px rgba(200,71,10,0.45);
+  --shadow-brand:  0 1px 8px rgba(200,71,10,0.30);
 
   /* Fonts */
   --font-sans:     var(--font-inter), system-ui, sans-serif;
@@ -65,15 +65,11 @@ body {
 
 ::placeholder { color: var(--ink-4); opacity: 1; }
 
-.brand-gradient { background: var(--brand); }
-.hero-gradient  { background: var(--dark); }
-.gold-gradient  { background: var(--brand-light); }
-
 /* Scrollbar */
 ::-webkit-scrollbar        { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track  { background: transparent; }
 ::-webkit-scrollbar-thumb  { background: var(--line); border-radius: 99px; }
-::-webkit-scrollbar-thumb:hover { background: #C8C4BC; }
+::-webkit-scrollbar-thumb:hover { background: #CCCCCC; }
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -82,8 +78,9 @@ body {
   outline: none;
   min-height: 80px;
   color: var(--ink-1);
-  font-size: 0.9375rem;
-  line-height: 1.8;
+  font-size: 1rem;
+  line-height: 1.85;
+  font-family: Georgia, var(--font-serif);
 }
 .tiptap p.is-editor-empty:first-child::before {
   color: var(--ink-4);
@@ -91,25 +88,33 @@ body {
   float: left;
   height: 0;
   pointer-events: none;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
 }
-.tiptap ul  { list-style: disc;    padding-left: 1.4rem; }
-.tiptap ol  { list-style: decimal; padding-left: 1.4rem; }
+.tiptap ul  { list-style: disc;    padding-left: 1.5rem; }
+.tiptap ol  { list-style: decimal; padding-left: 1.5rem; }
 .tiptap li  { margin-bottom: 0.3rem; }
-.tiptap h1  { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 700; line-height: 1.25; color: var(--ink-1); margin-bottom: 0.5rem; }
-.tiptap h2  { font-family: var(--font-serif); font-size: 1.2rem; font-weight: 600; color: var(--ink-1); margin-bottom: 0.4rem; }
-.tiptap h3  { font-size: 1.05rem; font-weight: 600; color: var(--ink-2); margin-bottom: 0.3rem; }
-.tiptap blockquote { border-left: 3px solid var(--line); padding-left: 1rem; color: var(--ink-3); font-style: italic; margin: 0.75rem 0; }
+.tiptap h1  { font-family: var(--font-serif); font-size: 1.625rem; font-weight: 700; line-height: 1.2; color: var(--ink-1); margin-bottom: 0.75rem; margin-top: 1.25rem; }
+.tiptap h2  { font-family: var(--font-serif); font-size: 1.25rem; font-weight: 700; color: var(--ink-1); margin-bottom: 0.5rem; margin-top: 1rem; }
+.tiptap h3  { font-family: var(--font-sans); font-size: 1rem; font-weight: 700; color: var(--ink-2); margin-bottom: 0.35rem; margin-top: 0.75rem; }
+.tiptap blockquote {
+  border-left: 3px solid var(--ink-1);
+  padding-left: 1.25rem;
+  color: var(--ink-3);
+  font-style: italic;
+  margin: 1rem 0;
+}
 .tiptap strong { font-weight: 700; }
-.tiptap em     { font-style: italic; color: var(--ink-2); }
+.tiptap em     { font-style: italic; }
 .tiptap u      { text-decoration: underline; text-decoration-color: var(--brand); }
-.tiptap p      { margin-bottom: 0.4rem; }
+.tiptap p      { margin-bottom: 0.6rem; }
 
 /* ── Modo Púlpito ───────────────────────────────────────── */
-.pulpito-content { line-height: 1.85; }
+.pulpito-content { line-height: 1.9; font-family: Georgia, serif; }
 .pulpito-content p         { margin-bottom: 0.85rem; }
-.pulpito-content h1        { font-family: var(--font-serif); font-size: 1.75rem; font-weight: 700; color: #fff; margin-bottom: 1rem; }
-.pulpito-content h2        { font-family: var(--font-serif); font-size: 1.35rem; font-weight: 600; color: #fff; margin-bottom: 0.75rem; }
-.pulpito-content h3        { font-size: 1.1rem; font-weight: 600; color: rgba(255,255,255,.85); margin-bottom: 0.5rem; }
+.pulpito-content h1        { font-family: var(--font-serif); font-size: 1.875rem; font-weight: 700; color: #fff; margin-bottom: 1rem; }
+.pulpito-content h2        { font-family: var(--font-serif); font-size: 1.375rem; font-weight: 700; color: #fff; margin-bottom: 0.75rem; }
+.pulpito-content h3        { font-size: 1.1rem; font-weight: 700; color: rgba(255,255,255,.85); margin-bottom: 0.5rem; }
 .pulpito-content strong    { color: #fff; font-weight: 700; }
 .pulpito-content em        { color: rgba(255,255,255,.75); font-style: italic; }
 .pulpito-content u         { text-decoration: underline; text-decoration-color: var(--brand-bright); }
@@ -117,8 +122,8 @@ body {
 .pulpito-content ol        { list-style: decimal; padding-left: 1.5rem; margin-bottom: 0.75rem; }
 .pulpito-content li        { margin-bottom: 0.4rem; }
 .pulpito-content blockquote {
-  border-left: 3px solid rgba(200,71,10,0.35);
-  padding-left: 1rem;
+  border-left: 3px solid rgba(255,255,255,0.3);
+  padding-left: 1.25rem;
   color: rgba(255,255,255,.55);
   font-style: italic;
   margin: 1rem 0;

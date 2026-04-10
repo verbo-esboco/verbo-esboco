@@ -108,47 +108,58 @@ export default function EsbocoEditor({ esboco: inicial, pastas }: Props) {
 
       <div className="flex-1 flex flex-col overflow-hidden" style={{ background: 'var(--bg)' }}>
 
-        {/* ── Header ──────────────────────────────────────── */}
+        {/* ── Header do editor ─────────────────────────────── */}
         <div
-          className="shrink-0 px-8 pt-7 pb-5"
-          style={{ background: 'var(--surface)', borderBottom: '1px solid var(--line)' }}
+          className="shrink-0"
+          style={{
+            background: 'var(--surface)',
+            borderBottom: '2px solid var(--ink-1)',
+            padding: '40px 56px 28px',
+          }}
         >
-          {/* Referência */}
+          {/* Referência bíblica */}
           <div className="flex items-center gap-2 mb-3">
-            <BookOpen className="w-3.5 h-3.5 shrink-0" style={{ color: 'var(--brand)' }} />
+            <BookOpen className="w-3.5 h-3.5 shrink-0" style={{ color: 'var(--ink-4)' }} />
             <input
               type="text"
               value={dados.referencia_biblica}
               onChange={e => update('referencia_biblica', e.target.value)}
               placeholder="Referência bíblica — ex: João 3:16"
-              className="text-sm font-medium bg-transparent focus:outline-none flex-1"
-              style={{ color: 'var(--brand)' }}
+              className="text-sm bg-transparent focus:outline-none flex-1"
+              style={{ color: 'var(--brand)', fontStyle: 'italic', fontFamily: 'Georgia, serif' }}
             />
           </div>
 
-          {/* Título */}
+          {/* Título — grande, serif */}
           <input
             type="text"
             value={dados.titulo}
             onChange={e => update('titulo', e.target.value)}
             placeholder="Título do esboço"
-            className="w-full bg-transparent focus:outline-none mb-5"
+            className="w-full bg-transparent focus:outline-none mb-6"
             style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: '1.625rem',
+              fontSize: '2rem',
               fontWeight: 700,
               color: 'var(--ink-1)',
-              lineHeight: 1.25,
+              lineHeight: 1.2,
+              letterSpacing: '-0.02em',
             }}
           />
 
-          {/* Barra de ações */}
-          <div className="flex items-center gap-2 flex-wrap">
+          {/* Barra de ações — discreta, tipografia pequeena */}
+          <div
+            className="flex items-center gap-4 flex-wrap"
+            style={{ borderTop: '1px solid var(--line)', paddingTop: '16px' }}
+          >
 
             {/* Autosave */}
-            <span className="text-xs flex items-center gap-1.5" style={{ color: 'var(--ink-4)' }}>
+            <span
+              className="flex items-center gap-1.5 uppercase tracking-widest"
+              style={{ fontSize: '0.625rem', color: 'var(--ink-4)', letterSpacing: '0.08em' }}
+            >
               {saving
-                ? <><Loader2 className="w-3 h-3 animate-spin" /> Salvando…</>
+                ? <><Loader2 className="w-2.5 h-2.5 animate-spin" /> Salvando…</>
                 : lastSaved
                   ? <>Salvo {formatDistanceToNow(lastSaved, { locale: ptBR, addSuffix: true })}</>
                   : null}
@@ -160,18 +171,24 @@ export default function EsbocoEditor({ esboco: inicial, pastas }: Props) {
             <button
               onClick={handleToggleFixado}
               title={dados.fixado ? 'Desafixar' : 'Fixar'}
-              className="w-8 h-8 flex items-center justify-center rounded-lg transition hover:bg-[var(--hover)]"
+              className="flex items-center justify-center w-7 h-7 transition hover:opacity-50"
               style={{ color: dados.fixado ? 'var(--brand)' : 'var(--ink-4)' }}
             >
-              <Star className="w-4 h-4" style={{ fill: dados.fixado ? 'var(--brand)' : 'none' }} />
+              <Star className="w-3.5 h-3.5" style={{ fill: dados.fixado ? 'var(--brand)' : 'none' }} />
             </button>
 
             {/* Status */}
             <div className="relative">
               <button
                 onClick={() => { setStatusMenu(!statusMenu); setPastaMenu(false) }}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition hover:opacity-80"
-                style={{ background: statusAtual.bg, color: statusAtual.color }}
+                className="flex items-center gap-1.5 transition hover:opacity-60"
+                style={{
+                  fontSize: '0.6875rem',
+                  color: statusAtual.color,
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                }}
               >
                 <StatusIcon className="w-3 h-3" />
                 {statusAtual.label}
@@ -180,8 +197,12 @@ export default function EsbocoEditor({ esboco: inicial, pastas }: Props) {
                 <>
                   <div className="fixed inset-0 z-10" onClick={() => setStatusMenu(false)} />
                   <div
-                    className="absolute right-0 top-9 z-20 rounded-xl py-1.5 w-40 overflow-hidden"
-                    style={{ background: 'var(--surface)', border: '1px solid var(--line)', boxShadow: 'var(--shadow-lg)' }}
+                    className="absolute right-0 top-7 z-20 py-1 w-36 overflow-hidden"
+                    style={{
+                      background: 'var(--surface)',
+                      border: '1px solid var(--line)',
+                      boxShadow: 'var(--shadow-md)',
+                    }}
                   >
                     {(Object.entries(STATUS_CONFIG) as [EsbocStatus, typeof STATUS_CONFIG.rascunho][]).map(([key, cfg]) => {
                       const Icon = cfg.icon
@@ -189,10 +210,14 @@ export default function EsbocoEditor({ esboco: inicial, pastas }: Props) {
                         <button
                           key={key}
                           onClick={() => { update('status', key); setStatusMenu(false) }}
-                          className="w-full flex items-center gap-2 px-3 py-2 text-sm transition hover:bg-[var(--bg)]"
-                          style={{ color: dados.status === key ? 'var(--brand)' : 'var(--ink-2)', fontWeight: dados.status === key ? 600 : 400 }}
+                          className="w-full flex items-center gap-2 px-4 py-2 text-xs transition hover:bg-[var(--hover)]"
+                          style={{
+                            color: dados.status === key ? 'var(--ink-1)' : 'var(--ink-3)',
+                            fontWeight: dados.status === key ? 700 : 400,
+                            letterSpacing: '0.04em',
+                          }}
                         >
-                          <Icon className="w-3.5 h-3.5" />
+                          <Icon className="w-3 h-3" />
                           {cfg.label}
                         </button>
                       )
@@ -206,8 +231,14 @@ export default function EsbocoEditor({ esboco: inicial, pastas }: Props) {
             <div className="relative">
               <button
                 onClick={() => { setPastaMenu(!pastaMenu); setStatusMenu(false) }}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition hover:bg-[var(--hover)]"
-                style={{ color: 'var(--ink-3)', border: '1px solid var(--line)' }}
+                className="flex items-center gap-1.5 transition hover:opacity-60"
+                style={{
+                  fontSize: '0.6875rem',
+                  color: 'var(--ink-4)',
+                  fontWeight: 500,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                }}
               >
                 <FolderOpen className="w-3 h-3" style={{ color: pasta?.cor ?? 'var(--ink-4)' }} />
                 {pasta?.nome ?? 'Pasta'}
@@ -216,13 +247,17 @@ export default function EsbocoEditor({ esboco: inicial, pastas }: Props) {
                 <>
                   <div className="fixed inset-0 z-10" onClick={() => setPastaMenu(false)} />
                   <div
-                    className="absolute right-0 top-9 z-20 rounded-xl py-1.5 w-48 overflow-hidden"
-                    style={{ background: 'var(--surface)', border: '1px solid var(--line)', boxShadow: 'var(--shadow-lg)' }}
+                    className="absolute right-0 top-7 z-20 py-1 w-44 overflow-hidden"
+                    style={{
+                      background: 'var(--surface)',
+                      border: '1px solid var(--line)',
+                      boxShadow: 'var(--shadow-md)',
+                    }}
                   >
                     <button
                       onClick={() => { update('pasta_id', null); setPastaMenu(false) }}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-sm transition hover:bg-[var(--bg)]"
-                      style={{ color: !dados.pasta_id ? 'var(--brand)' : 'var(--ink-3)', fontWeight: !dados.pasta_id ? 600 : 400 }}
+                      className="w-full flex items-center gap-2 px-4 py-2 text-xs transition hover:bg-[var(--hover)]"
+                      style={{ color: !dados.pasta_id ? 'var(--ink-1)' : 'var(--ink-3)', fontWeight: !dados.pasta_id ? 700 : 400 }}
                     >
                       Sem pasta
                     </button>
@@ -230,10 +265,10 @@ export default function EsbocoEditor({ esboco: inicial, pastas }: Props) {
                       <button
                         key={p.id}
                         onClick={() => { update('pasta_id', p.id); setPastaMenu(false) }}
-                        className="w-full flex items-center gap-2 px-3 py-2 text-sm transition hover:bg-[var(--bg)]"
-                        style={{ color: dados.pasta_id === p.id ? 'var(--brand)' : 'var(--ink-2)', fontWeight: dados.pasta_id === p.id ? 600 : 400 }}
+                        className="w-full flex items-center gap-2 px-4 py-2 text-xs transition hover:bg-[var(--hover)]"
+                        style={{ color: dados.pasta_id === p.id ? 'var(--ink-1)' : 'var(--ink-3)', fontWeight: dados.pasta_id === p.id ? 700 : 400 }}
                       >
-                        <div className="w-2 h-2 rounded-full shrink-0" style={{ background: p.cor }} />
+                        <div className="w-2 h-2 shrink-0" style={{ background: p.cor }} />
                         {p.nome}
                       </button>
                     ))}
@@ -245,8 +280,14 @@ export default function EsbocoEditor({ esboco: inicial, pastas }: Props) {
             {/* Púlpito */}
             <button
               onClick={() => setModoPulpito(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white transition hover:opacity-90"
-              style={{ background: 'var(--dark)' }}
+              className="flex items-center gap-1.5 transition hover:opacity-60"
+              style={{
+                fontSize: '0.6875rem',
+                color: 'var(--ink-1)',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+              }}
             >
               <MonitorPlay className="w-3 h-3" />
               Púlpito
@@ -256,24 +297,28 @@ export default function EsbocoEditor({ esboco: inicial, pastas }: Props) {
             <div className="relative">
               <button
                 onClick={() => setMenuAberto(!menuAberto)}
-                className="w-8 h-8 flex items-center justify-center rounded-lg transition hover:bg-[var(--hover)]"
+                className="flex items-center justify-center w-7 h-7 transition hover:opacity-50"
                 style={{ color: 'var(--ink-4)' }}
               >
-                <MoreVertical className="w-4 h-4" />
+                <MoreVertical className="w-3.5 h-3.5" />
               </button>
               {menuAberto && (
                 <>
                   <div className="fixed inset-0 z-10" onClick={() => setMenuAberto(false)} />
                   <div
-                    className="absolute right-0 top-9 z-20 rounded-xl py-1.5 w-44 overflow-hidden"
-                    style={{ background: 'var(--surface)', border: '1px solid var(--line)', boxShadow: 'var(--shadow-lg)' }}
+                    className="absolute right-0 top-8 z-20 py-1 w-40 overflow-hidden"
+                    style={{
+                      background: 'var(--surface)',
+                      border: '1px solid var(--line)',
+                      boxShadow: 'var(--shadow-md)',
+                    }}
                   >
                     <button
                       onClick={handleDelete}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-sm transition hover:bg-[var(--danger-bg)]"
-                      style={{ color: 'var(--danger)' }}
+                      className="w-full flex items-center gap-2 px-4 py-2 text-xs transition hover:bg-[var(--danger-bg)]"
+                      style={{ color: 'var(--danger)', letterSpacing: '0.04em' }}
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
+                      <Trash2 className="w-3 h-3" />
                       Excluir esboço
                     </button>
                   </div>
@@ -283,37 +328,35 @@ export default function EsbocoEditor({ esboco: inicial, pastas }: Props) {
           </div>
 
           {/* Tags */}
-          {(dados.tags.length > 0 || true) && (
-            <div className="flex items-center gap-1.5 mt-4 flex-wrap">
-              <Tag className="w-3 h-3 shrink-0" style={{ color: 'var(--ink-4)' }} />
-              {dados.tags.map(tag => (
-                <span
-                  key={tag}
-                  className="flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-md"
-                  style={{ background: 'var(--brand-muted)', color: 'var(--brand)' }}
-                >
-                  {tag}
-                  <button onClick={() => update('tags', dados.tags.filter(t => t !== tag))} className="hover:opacity-60 transition">
-                    <X className="w-2.5 h-2.5" />
-                  </button>
-                </span>
-              ))}
-              <input
-                type="text"
-                placeholder="+ tag"
-                value={tagInput}
-                onChange={e => setTagInput(e.target.value)}
-                onKeyDown={handleAddTag}
-                className="text-xs bg-transparent focus:outline-none w-14"
-                style={{ color: 'var(--ink-4)' }}
-              />
-            </div>
-          )}
+          <div className="flex items-center gap-2 mt-3 flex-wrap">
+            <Tag className="w-3 h-3 shrink-0" style={{ color: 'var(--ink-4)' }} />
+            {dados.tags.map(tag => (
+              <span
+                key={tag}
+                className="flex items-center gap-1 uppercase tracking-widest"
+                style={{ fontSize: '0.625rem', color: 'var(--ink-3)', letterSpacing: '0.1em' }}
+              >
+                #{tag}
+                <button onClick={() => update('tags', dados.tags.filter(t => t !== tag))} className="hover:opacity-50 transition">
+                  <X className="w-2.5 h-2.5" />
+                </button>
+              </span>
+            ))}
+            <input
+              type="text"
+              placeholder="+ tag"
+              value={tagInput}
+              onChange={e => setTagInput(e.target.value)}
+              onKeyDown={handleAddTag}
+              className="bg-transparent focus:outline-none uppercase tracking-widest"
+              style={{ fontSize: '0.625rem', color: 'var(--ink-4)', width: '3rem', letterSpacing: '0.1em' }}
+            />
+          </div>
         </div>
 
         {/* ── Seções ───────────────────────────────────────── */}
         <div className="flex-1 overflow-y-auto">
-          <div className="max-w-2xl mx-auto px-6 py-6 space-y-2.5">
+          <div className="max-w-2xl mx-auto px-14 py-8">
             {SECOES.map((secao, i) => (
               <SecaoCard
                 key={secao.key}
@@ -348,39 +391,46 @@ function SecaoCard({ num, label, placeholder, content, onChange, isOpen, onToggl
 
   return (
     <div
-      className="rounded-xl overflow-hidden transition-all"
-      style={{
-        background: 'var(--surface)',
-        border: '1px solid',
-        borderColor: isOpen && !isEmpty ? 'var(--brand)' : 'var(--line)',
-        boxShadow: isOpen ? 'var(--shadow-xs)' : 'none',
-      }}
+      className="transition-all"
+      style={{ borderTop: '1px solid var(--line)', paddingTop: isLast ? undefined : undefined }}
     >
       <button
         onClick={onToggle}
-        className="w-full flex items-center gap-3 px-4 py-3.5 text-left transition hover:bg-[var(--bg)]"
+        className="w-full flex items-center gap-4 py-4 text-left transition hover:opacity-70"
       >
-        {/* Numeral */}
-        <div
-          className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-all"
+        {/* Numeral romano — editorial */}
+        <span
           style={{
             fontFamily: 'var(--font-serif)',
-            fontSize: '0.75rem',
+            fontSize: '0.6875rem',
             fontWeight: 700,
-            background: !isEmpty ? 'var(--brand)' : 'var(--surface-2)',
-            color: !isEmpty ? '#fff' : 'var(--ink-4)',
+            color: !isEmpty ? 'var(--ink-1)' : 'var(--ink-4)',
+            letterSpacing: '0.05em',
+            minWidth: '1.5rem',
+            textAlign: 'right',
           }}
         >
           {num}
-        </div>
+        </span>
 
+        {/* Label + preview */}
         <div className="flex-1 min-w-0">
-          <span className="text-sm font-semibold" style={{ color: 'var(--ink-1)' }}>{label}</span>
-          {isEmpty && (
-            <span className="text-xs ml-2" style={{ color: 'var(--ink-4)' }}>vazio</span>
-          )}
+          <span
+            className="uppercase tracking-widest"
+            style={{
+              fontSize: '0.6875rem',
+              fontWeight: 700,
+              color: !isEmpty ? 'var(--ink-1)' : 'var(--ink-4)',
+              letterSpacing: '0.1em',
+            }}
+          >
+            {label}
+          </span>
           {!isEmpty && !isOpen && (
-            <p className="text-xs truncate mt-0.5" style={{ color: 'var(--ink-3)' }}>
+            <p
+              className="truncate mt-0.5"
+              style={{ fontSize: '0.8125rem', color: 'var(--ink-3)', fontFamily: 'Georgia, serif', fontStyle: 'italic' }}
+            >
               {content.replace(/<[^>]*>/g, '').slice(0, 100)}
             </p>
           )}
@@ -393,17 +443,18 @@ function SecaoCard({ num, label, placeholder, content, onChange, isOpen, onToggl
       </button>
 
       {isOpen && (
-        <div className="px-4 pb-4" style={{ borderTop: '1px solid var(--line-soft)' }}>
-          <div className="pt-4 pl-10">
-            <TiptapEditor
-              content={content}
-              placeholder={placeholder}
-              onChange={onChange}
-              minHeight="80px"
-            />
-          </div>
+        <div className="pl-10 pb-6">
+          <TiptapEditor
+            content={content}
+            placeholder={placeholder}
+            onChange={onChange}
+            minHeight="80px"
+          />
         </div>
       )}
+
+      {/* Linha inferior — último não tem */}
+      {!isLast && !isOpen && <div style={{ borderBottom: '0px' }} />}
     </div>
   )
 }
