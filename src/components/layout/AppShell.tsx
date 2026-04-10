@@ -34,59 +34,82 @@ export default function AppShell({ user, esbocos, pastas, children }: Props) {
   return (
     <div className="h-screen flex overflow-hidden" style={{ background: 'var(--bg)' }}>
 
-      {/* ── Painel Lista — full-width quando não editando ─── */}
+      {/* ── Painel Lista ─────────────────────────────────── */}
       <div
         className={`flex flex-col shrink-0 transition-all ${
           isEditing
-            ? 'hidden md:flex md:w-[320px] lg:w-[360px]'
+            ? 'hidden md:flex md:w-[300px] lg:w-[340px]'
             : 'flex w-full md:w-full'
         }`}
-        style={{ background: 'var(--surface)', borderRight: isEditing ? '1px solid var(--line)' : 'none' }}
+        style={{
+          background: 'var(--surface)',
+          borderRight: isEditing ? '1px solid var(--line)' : 'none',
+        }}
       >
         {/* Header */}
         <div
-          className="flex items-center justify-between shrink-0"
+          className="shrink-0 flex items-center gap-3"
           style={{
             borderBottom: '1px solid var(--line)',
-            padding: isEditing ? '12px 16px' : '16px 24px',
+            padding: isEditing ? '14px 16px' : '18px 24px',
           }}
         >
-          <div className="flex items-center gap-3">
-            <Image src="/verbo.png" alt="VERBO" width={isEditing ? 28 : 36} height={isEditing ? 28 : 36} className="object-contain" />
-            <div>
-              <p className="font-bold leading-tight tracking-tight" style={{ fontSize: isEditing ? '0.875rem' : '1rem', color: 'var(--ink-1)' }}>VERBO</p>
-              {!isEditing && <p className="text-xs leading-tight" style={{ color: 'var(--ink-4)' }}>Esboços Bíblicos</p>}
+          {/* Logo + wordmark */}
+          <Image
+            src="/verbo.png"
+            alt="VERBO"
+            width={isEditing ? 26 : 32}
+            height={isEditing ? 26 : 32}
+            className="object-contain shrink-0"
+          />
+          <div className="flex-1 min-w-0">
+            <div className="flex items-baseline gap-2">
+              <span
+                className="font-bold tracking-tight leading-none"
+                style={{
+                  fontSize: isEditing ? '0.8125rem' : '0.9375rem',
+                  color: 'var(--ink-1)',
+                }}
+              >
+                VERBO
+              </span>
+              {!isEditing && (
+                <span className="text-xs" style={{ color: 'var(--ink-4)' }}>
+                  Esboços Bíblicos
+                </span>
+              )}
             </div>
             {!isEditing && (
-              <span className="text-sm ml-1" style={{ color: 'var(--ink-4)' }}>
-                · {esbocos.length} esboço{esbocos.length !== 1 ? 's' : ''}
-              </span>
+              <p className="text-xs mt-0.5" style={{ color: 'var(--ink-4)' }}>
+                {esbocos.length} {esbocos.length === 1 ? 'esboço' : 'esboços'}
+              </p>
             )}
           </div>
 
-          <div className="flex items-center gap-2">
+          {/* Ações */}
+          <div className="flex items-center gap-1.5 shrink-0">
             <button
               onClick={handleNovo}
               disabled={isPending}
-              className="flex items-center gap-2 rounded-full font-semibold text-white transition hover:opacity-90 active:scale-95 disabled:opacity-50"
+              className="flex items-center gap-1.5 font-semibold text-white rounded-full transition hover:opacity-90 active:scale-95 disabled:opacity-50"
               style={{
                 background: 'var(--brand)',
                 boxShadow: 'var(--shadow-brand)',
-                padding: isEditing ? '7px 14px' : '10px 20px',
-                fontSize: isEditing ? '0.75rem' : '0.875rem',
+                padding: isEditing ? '6px 14px' : '8px 18px',
+                fontSize: isEditing ? '0.75rem' : '0.8125rem',
               }}
             >
-              <Plus className={isEditing ? 'w-3.5 h-3.5' : 'w-4 h-4'} />
+              <Plus className={isEditing ? 'w-3 h-3' : 'w-3.5 h-3.5'} />
               Novo
             </button>
             <form action={signOut}>
               <button
                 type="submit"
-                className="w-9 h-9 flex items-center justify-center rounded-full transition hover:bg-[var(--bg)]"
+                className="w-8 h-8 flex items-center justify-center rounded-full transition hover:bg-[var(--hover)]"
                 style={{ color: 'var(--ink-4)' }}
                 title="Sair"
               >
-                <LogOut className="w-4 h-4" />
+                <LogOut className="w-3.5 h-3.5" />
               </button>
             </form>
           </div>
@@ -132,12 +155,16 @@ export default function AppShell({ user, esbocos, pastas, children }: Props) {
         </div>
       </div>
 
-      {/* ── Editor ──────────────────────────────────────────── */}
+      {/* ── Editor ───────────────────────────────────────── */}
       <div className={`flex flex-col flex-1 overflow-hidden ${!isEditing ? 'hidden' : 'flex'}`}>
         {isEditing && (
           <div
             className="md:hidden flex items-center gap-3 px-4 py-3 border-b shrink-0"
-            style={{ background: 'var(--surface)', borderColor: 'var(--line)', paddingTop: 'calc(env(safe-area-inset-top, 0px) + 0.75rem)' }}
+            style={{
+              background: 'var(--surface)',
+              borderColor: 'var(--line)',
+              paddingTop: 'calc(env(safe-area-inset-top, 0px) + 0.75rem)',
+            }}
           >
             <Link
               href="/esbocos"

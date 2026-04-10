@@ -78,7 +78,7 @@ export default function TiptapEditor({ content, placeholder, onChange, minHeight
           <UnderlineIcon className="w-3.5 h-3.5" />
         </ToolBtn>
 
-        <div className="w-px h-4 bg-[#e5e5e0] mx-0.5" />
+        <div className="w-px h-4 mx-0.5" style={{ background: 'var(--line)' }} />
 
         <ToolBtn
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
@@ -95,7 +95,7 @@ export default function TiptapEditor({ content, placeholder, onChange, minHeight
           <Heading2 className="w-3.5 h-3.5" />
         </ToolBtn>
 
-        <div className="w-px h-4 bg-[#e5e5e0] mx-0.5" />
+        <div className="w-px h-4 mx-0.5" style={{ background: 'var(--line)' }} />
 
         <ToolBtn
           onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -119,7 +119,7 @@ export default function TiptapEditor({ content, placeholder, onChange, minHeight
           <Quote className="w-3.5 h-3.5" />
         </ToolBtn>
 
-        <div className="w-px h-4 bg-[#e5e5e0] mx-0.5" />
+        <div className="w-px h-4 mx-0.5" style={{ background: 'var(--line)' }} />
 
         <ToolBtn
           onClick={() => editor.chain().focus().setTextAlign('left').run()}
@@ -162,11 +162,13 @@ function ToolBtn({
       type="button"
       onMouseDown={e => { e.preventDefault(); onClick() }}
       title={title}
-      className={`p-1 rounded transition ${
-        active
-          ? 'bg-orange-100 text-orange-600'
-          : 'text-[#6b6b6b] hover:bg-[#f0f0ec] hover:text-[#1c1c1e]'
-      }`}
+      className="p-1 rounded transition"
+      style={{
+        background: active ? 'var(--brand-muted)' : 'transparent',
+        color: active ? 'var(--brand)' : 'var(--ink-3)',
+      }}
+      onMouseEnter={e => { if (!active) { (e.currentTarget as HTMLElement).style.background = 'var(--hover)'; (e.currentTarget as HTMLElement).style.color = 'var(--ink-1)' } }}
+      onMouseLeave={e => { if (!active) { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = 'var(--ink-3)' } }}
     >
       {children}
     </button>
