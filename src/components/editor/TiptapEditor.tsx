@@ -70,6 +70,7 @@ export default function TiptapEditor({ content, placeholder, onChange, minHeight
   )?.color
 
   function applyHighlight(color: string) {
+    if (!editor) return
     setPaletteOpen(false)
     if (editor.isActive('highlight', { color })) {
       editor.chain().focus().unsetHighlight().run()
@@ -79,6 +80,7 @@ export default function TiptapEditor({ content, placeholder, onChange, minHeight
   }
 
   function removeHighlight() {
+    if (!editor) return
     setPaletteOpen(false)
     editor.chain().focus().unsetHighlight().run()
   }
