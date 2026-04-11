@@ -1,71 +1,63 @@
-@import "tailwindcss";
-
 :root {
-  /* Brand — deep brick (usado cirurgicamente) */
-  --brand:         #C8470A;
-  --brand-light:   #E05A14;
-  --brand-bright:  #F07038;
-  --brand-muted:   rgba(200, 71, 10, 0.08);
-  --brand-muted-2: rgba(200, 71, 10, 0.04);
+  /* Override Bootstrap primary com a cor da marca */
+  --bs-primary:        #C8470A;
+  --bs-primary-rgb:    200, 71, 10;
+  --bs-link-color:     #C8470A;
+  --bs-link-hover-color: #E05A14;
 
-  /* Dark */
-  --dark:          #111111;
-  --dark-2:        #222222;
+  /* Brand */
+  --brand:             #C8470A;
+  --brand-light:       #E05A14;
+  --brand-bright:      #F07038;
+  --brand-muted:       rgba(200, 71, 10, 0.10);
 
-  /* Surfaces — branco editorial */
-  --bg:            #FFFFFF;
-  --surface:       #FFFFFF;
-  --surface-2:     #F5F5F5;
-  --hover:         #F8F8F8;
-  --active:        #F0F0F0;
+  /* Surfaces */
+  --bg:                #FFFFFF;
+  --surface:           #FFFFFF;
+  --hover:             #F8F8F8;
+  --line:              #E8E8E8;
 
   /* Text */
-  --ink-1:         #111111;
-  --ink-2:         #333333;
-  --ink-3:         #757575;
-  --ink-4:         #AAAAAA;
-
-  /* Lines — delicadas */
-  --line:          #E8E8E8;
-  --line-soft:     #F0F0F0;
+  --ink-1:             #111111;
+  --ink-2:             #333333;
+  --ink-3:             #757575;
+  --ink-4:             #AAAAAA;
 
   /* Semantic */
-  --success:       #166534;
-  --success-bg:    #F0FDF4;
-  --warning:       #92400E;
-  --warning-bg:    #FFFBEB;
-  --info:          #1E40AF;
-  --info-bg:       #EFF6FF;
-  --danger:        #991B1B;
-  --danger-bg:     #FEF2F2;
+  --danger:            #991B1B;
+  --danger-bg:         #FEF2F2;
 
-  /* Shadows — quase nenhuma */
-  --shadow-xs:     0 1px 2px rgba(0,0,0,0.04);
-  --shadow-sm:     0 1px 4px rgba(0,0,0,0.06);
-  --shadow-md:     0 4px 16px rgba(0,0,0,0.06);
-  --shadow-lg:     0 8px 32px rgba(0,0,0,0.08);
-  --shadow-fab:    0 4px 20px rgba(200,71,10,0.45);
-  --shadow-brand:  0 1px 8px rgba(200,71,10,0.30);
+  /* Shadows */
+  --shadow-md:         0 4px 16px rgba(0,0,0,0.08);
 
   /* Fonts */
-  --font-sans:     var(--font-inter), system-ui, sans-serif;
-  --font-serif:    var(--font-playfair), Georgia, serif;
+  --font-sans:         var(--font-inter), system-ui, sans-serif;
+  --font-serif:        var(--font-playfair), Georgia, serif;
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* Bootstrap btn-primary override */
+.btn-primary {
+  --bs-btn-bg:                 #C8470A;
+  --bs-btn-border-color:       #C8470A;
+  --bs-btn-hover-bg:           #E05A14;
+  --bs-btn-hover-border-color: #E05A14;
+  --bs-btn-active-bg:          #b33d08;
+  --bs-btn-active-border-color:#b33d08;
+  --bs-btn-disabled-bg:        #C8470A;
+  --bs-btn-disabled-border-color: #C8470A;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
 html, body { height: 100%; }
 
 body {
   font-family: var(--font-sans);
-  background: var(--bg);
-  color: var(--ink-1);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-::placeholder { color: var(--ink-4); opacity: 1; }
-
-/* Scrollbar */
+/* Scrollbar fina */
 ::-webkit-scrollbar        { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track  { background: transparent; }
 ::-webkit-scrollbar-thumb  { background: var(--line); border-radius: 99px; }
@@ -95,8 +87,8 @@ body {
 .tiptap ol  { list-style: decimal; padding-left: 1.5rem; }
 .tiptap li  { margin-bottom: 0.3rem; }
 .tiptap h1  { font-family: var(--font-serif); font-size: 1.625rem; font-weight: 700; line-height: 1.2; color: var(--ink-1); margin-bottom: 0.75rem; margin-top: 1.25rem; }
-.tiptap h2  { font-family: var(--font-serif); font-size: 1.25rem; font-weight: 700; color: var(--ink-1); margin-bottom: 0.5rem; margin-top: 1rem; }
-.tiptap h3  { font-family: var(--font-sans); font-size: 1rem; font-weight: 700; color: var(--ink-2); margin-bottom: 0.35rem; margin-top: 0.75rem; }
+.tiptap h2  { font-family: var(--font-serif); font-size: 1.25rem;  font-weight: 700; color: var(--ink-1); margin-bottom: 0.5rem;  margin-top: 1rem; }
+.tiptap h3  { font-family: var(--font-sans);  font-size: 1rem;     font-weight: 700; color: var(--ink-2); margin-bottom: 0.35rem; margin-top: 0.75rem; }
 .tiptap blockquote {
   border-left: 3px solid var(--ink-1);
   padding-left: 1.25rem;
@@ -128,3 +120,13 @@ body {
   font-style: italic;
   margin: 1rem 0;
 }
+
+/* ── Bootstrap overrides pontuais ───────────────────────── */
+.card { border-color: var(--line); }
+.card-header {
+  background: #f8f8f8;
+  border-bottom-color: var(--line);
+  font-size: 0.8125rem;
+}
+.navbar-brand { font-family: var(--font-serif); letter-spacing: -0.01em; }
+.badge { font-weight: 600; letter-spacing: 0.03em; }

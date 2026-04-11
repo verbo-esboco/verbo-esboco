@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter, Playfair_Display } from 'next/font/google'
+import 'bootstrap/dist/css/bootstrap.min.css'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
@@ -12,8 +13,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR" className="h-full">
-      <body className={`${inter.variable} ${playfair.variable} font-sans h-full`}>{children}</body>
+    <html lang="pt-BR" className="h-100">
+      <body className={`${inter.variable} ${playfair.variable} h-100`} style={{ fontFamily: 'var(--font-sans)' }}>
+        {children}
+      </body>
     </html>
   )
 }

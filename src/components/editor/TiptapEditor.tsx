@@ -43,7 +43,6 @@ export default function TiptapEditor({ content, placeholder, onChange, minHeight
     immediatelyRender: false,
   })
 
-  // Sync external content changes (e.g., when esboco loads)
   useEffect(() => {
     if (editor && content !== editor.getHTML()) {
       editor.commands.setContent(content)
@@ -53,95 +52,97 @@ export default function TiptapEditor({ content, placeholder, onChange, minHeight
   if (!editor) return null
 
   return (
-    <div className="group">
-      {/* Toolbar — aparece ao focar */}
-      <div className="flex flex-wrap items-center gap-0.5 mb-1 opacity-0 group-focus-within:opacity-100 transition-opacity">
-        <ToolBtn
-          onClick={() => editor.chain().focus().toggleBold().run()}
-          active={editor.isActive('bold')}
-          title="Negrito"
-        >
-          <Bold className="w-3.5 h-3.5" />
-        </ToolBtn>
-        <ToolBtn
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-          active={editor.isActive('italic')}
-          title="Itálico"
-        >
-          <Italic className="w-3.5 h-3.5" />
-        </ToolBtn>
-        <ToolBtn
-          onClick={() => editor.chain().focus().toggleUnderline().run()}
-          active={editor.isActive('underline')}
-          title="Sublinhado"
-        >
-          <UnderlineIcon className="w-3.5 h-3.5" />
-        </ToolBtn>
+    <div>
+      {/* Toolbar Bootstrap btn-group */}
+      <div className="btn-toolbar mb-2 gap-1" role="toolbar">
+        <div className="btn-group btn-group-sm" role="group">
+          <ToolBtn
+            onClick={() => editor.chain().focus().toggleBold().run()}
+            active={editor.isActive('bold')}
+            title="Negrito"
+          >
+            <Bold size={12} />
+          </ToolBtn>
+          <ToolBtn
+            onClick={() => editor.chain().focus().toggleItalic().run()}
+            active={editor.isActive('italic')}
+            title="Itálico"
+          >
+            <Italic size={12} />
+          </ToolBtn>
+          <ToolBtn
+            onClick={() => editor.chain().focus().toggleUnderline().run()}
+            active={editor.isActive('underline')}
+            title="Sublinhado"
+          >
+            <UnderlineIcon size={12} />
+          </ToolBtn>
+        </div>
 
-        <div className="w-px h-4 mx-0.5" style={{ background: 'var(--line)' }} />
+        <div className="btn-group btn-group-sm" role="group">
+          <ToolBtn
+            onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+            active={editor.isActive('heading', { level: 1 })}
+            title="Título 1"
+          >
+            <Heading1 size={12} />
+          </ToolBtn>
+          <ToolBtn
+            onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+            active={editor.isActive('heading', { level: 2 })}
+            title="Título 2"
+          >
+            <Heading2 size={12} />
+          </ToolBtn>
+        </div>
 
-        <ToolBtn
-          onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-          active={editor.isActive('heading', { level: 1 })}
-          title="Título 1"
-        >
-          <Heading1 className="w-3.5 h-3.5" />
-        </ToolBtn>
-        <ToolBtn
-          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-          active={editor.isActive('heading', { level: 2 })}
-          title="Título 2"
-        >
-          <Heading2 className="w-3.5 h-3.5" />
-        </ToolBtn>
+        <div className="btn-group btn-group-sm" role="group">
+          <ToolBtn
+            onClick={() => editor.chain().focus().toggleBulletList().run()}
+            active={editor.isActive('bulletList')}
+            title="Lista"
+          >
+            <List size={12} />
+          </ToolBtn>
+          <ToolBtn
+            onClick={() => editor.chain().focus().toggleOrderedList().run()}
+            active={editor.isActive('orderedList')}
+            title="Lista numerada"
+          >
+            <ListOrdered size={12} />
+          </ToolBtn>
+          <ToolBtn
+            onClick={() => editor.chain().focus().toggleBlockquote().run()}
+            active={editor.isActive('blockquote')}
+            title="Citação"
+          >
+            <Quote size={12} />
+          </ToolBtn>
+        </div>
 
-        <div className="w-px h-4 mx-0.5" style={{ background: 'var(--line)' }} />
-
-        <ToolBtn
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-          active={editor.isActive('bulletList')}
-          title="Lista"
-        >
-          <List className="w-3.5 h-3.5" />
-        </ToolBtn>
-        <ToolBtn
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          active={editor.isActive('orderedList')}
-          title="Lista numerada"
-        >
-          <ListOrdered className="w-3.5 h-3.5" />
-        </ToolBtn>
-        <ToolBtn
-          onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          active={editor.isActive('blockquote')}
-          title="Citação"
-        >
-          <Quote className="w-3.5 h-3.5" />
-        </ToolBtn>
-
-        <div className="w-px h-4 mx-0.5" style={{ background: 'var(--line)' }} />
-
-        <ToolBtn
-          onClick={() => editor.chain().focus().setTextAlign('left').run()}
-          active={editor.isActive({ textAlign: 'left' })}
-          title="Alinhar esquerda"
-        >
-          <AlignLeft className="w-3.5 h-3.5" />
-        </ToolBtn>
-        <ToolBtn
-          onClick={() => editor.chain().focus().setTextAlign('center').run()}
-          active={editor.isActive({ textAlign: 'center' })}
-          title="Centralizar"
-        >
-          <AlignCenter className="w-3.5 h-3.5" />
-        </ToolBtn>
-        <ToolBtn
-          onClick={() => editor.chain().focus().setTextAlign('right').run()}
-          active={editor.isActive({ textAlign: 'right' })}
-          title="Alinhar direita"
-        >
-          <AlignRight className="w-3.5 h-3.5" />
-        </ToolBtn>
+        <div className="btn-group btn-group-sm" role="group">
+          <ToolBtn
+            onClick={() => editor.chain().focus().setTextAlign('left').run()}
+            active={editor.isActive({ textAlign: 'left' })}
+            title="Alinhar esquerda"
+          >
+            <AlignLeft size={12} />
+          </ToolBtn>
+          <ToolBtn
+            onClick={() => editor.chain().focus().setTextAlign('center').run()}
+            active={editor.isActive({ textAlign: 'center' })}
+            title="Centralizar"
+          >
+            <AlignCenter size={12} />
+          </ToolBtn>
+          <ToolBtn
+            onClick={() => editor.chain().focus().setTextAlign('right').run()}
+            active={editor.isActive({ textAlign: 'right' })}
+            title="Alinhar direita"
+          >
+            <AlignRight size={12} />
+          </ToolBtn>
+        </div>
       </div>
 
       <EditorContent editor={editor} />
@@ -162,13 +163,8 @@ function ToolBtn({
       type="button"
       onMouseDown={e => { e.preventDefault(); onClick() }}
       title={title}
-      className="p-1 rounded transition"
-      style={{
-        background: active ? 'var(--brand-muted)' : 'transparent',
-        color: active ? 'var(--brand)' : 'var(--ink-3)',
-      }}
-      onMouseEnter={e => { if (!active) { (e.currentTarget as HTMLElement).style.background = 'var(--hover)'; (e.currentTarget as HTMLElement).style.color = 'var(--ink-1)' } }}
-      onMouseLeave={e => { if (!active) { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = 'var(--ink-3)' } }}
+      className={`btn btn-sm ${active ? 'btn-dark' : 'btn-outline-secondary'}`}
+      style={{ padding: '2px 6px', lineHeight: 1 }}
     >
       {children}
     </button>

@@ -2,26 +2,23 @@ import Image from 'next/image'
 
 export default function EsbocosPage() {
   return (
-    <div
-      className="flex-1 flex items-center justify-center"
-      style={{ background: 'var(--bg)' }}
-    >
-      <div className="text-center max-w-xs px-8">
-        <div className="flex justify-center mb-5">
+    <div className="d-flex align-items-center justify-content-center h-100 text-center">
+      <div style={{ maxWidth: '280px', padding: '32px 16px' }}>
+        <div className="d-flex justify-content-center mb-4">
           <div
-            className="w-20 h-20 rounded-3xl flex items-center justify-center"
-            style={{ background: 'var(--surface)', border: '1px solid var(--line)', boxShadow: 'var(--shadow-md)' }}
+            className="d-flex align-items-center justify-content-center rounded"
+            style={{ width: 72, height: 72, background: '#f8f9fa', border: '1px solid var(--line)' }}
           >
-            <Image src="/verbo.png" alt="VERBO" width={48} height={48} className="object-contain opacity-60" />
+            <Image src="/verbo.png" alt="VERBO" width={40} height={40} className="object-contain opacity-50" />
           </div>
         </div>
-        <h2 className="text-xl font-bold mb-2" style={{ color: 'var(--ink-1)' }}>
+        <h5 className="fw-bold mb-2" style={{ fontFamily: 'var(--font-serif)' }}>
           Selecione um esboço
-        </h2>
-        <p className="text-sm leading-relaxed" style={{ color: 'var(--ink-4)' }}>
+        </h5>
+        <p className="text-muted small mb-0">
           Escolha um esboço na lista ou clique em{' '}
-          <span className="font-semibold" style={{ color: 'var(--brand)' }}>Novo</span>{' '}
-          para começar
+          <strong style={{ color: 'var(--brand)' }}>Novo</strong>{' '}
+          para criar sua primeira mensagem.
         </p>
       </div>
     </div>

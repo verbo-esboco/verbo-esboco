@@ -4,9 +4,8 @@ import { useState, useCallback, useEffect, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Esboco, Pasta, EsbocStatus } from '@/types'
 import {
-  Star, MoreVertical, Trash2, CheckCircle2,
-  Mic2, FolderOpen, Tag, Loader2, X, MonitorPlay,
-  ChevronDown, ChevronRight, Pencil, BookOpen
+  Star, Trash2, CheckCircle2, Mic2, FolderOpen, Tag,
+  MonitorPlay, ChevronDown, ChevronRight, Pencil, BookOpen
 } from 'lucide-react'
 import { updateEsboco, deleteEsboco, toggleFixado } from '@/lib/actions'
 import TiptapEditor from './TiptapEditor'
@@ -26,10 +25,10 @@ const SECOES: { key: SecaoKey; label: string; num: string; placeholder: string }
   { key: 'conclusao',       label: 'Conclusão',       num: 'V',   placeholder: 'Como fechar a mensagem? Qual o chamado à ação?' },
 ]
 
-const STATUS_CONFIG: Record<EsbocStatus, { label: string; icon: React.ElementType; color: string; bg: string }> = {
-  rascunho: { label: 'Em edição', icon: Pencil,       color: '#92400E', bg: '#FEF3C7' },
-  pronto:   { label: 'Pronto',    icon: CheckCircle2, color: '#166534', bg: '#DCFCE7' },
-  pregado:  { label: 'Pregado',   icon: Mic2,         color: '#1E40AF', bg: '#DBEAFE' },
+const STATUS_CONFIG: Record<EsbocStatus, { label: string; icon: React.ElementType; bsColor: string; textDark?: boolean }> = {
+  rascunho: { label: 'Em edição', icon: Pencil,       bsColor: 'warning', textDark: true },
+  pronto:   { label: 'Pronto',    icon: CheckCircle2, bsColor: 'success' },
+  pregado:  { label: 'Pregado',   icon: Mic2,         bsColor: 'primary' },
 }
 
 export default function EsbocoEditor({ esboco: inicial, pastas }: Props) {
@@ -37,12 +36,12 @@ export default function EsbocoEditor({ esboco: inicial, pastas }: Props) {
   const [isPending, startTransition] = useTransition()
   const [saving, setSaving]           = useState(false)
   const [lastSaved, setLastSaved]     = useState<Date | null>(null)
-  const [menuAberto, setMenuAberto]   = useState(false)
   const [statusMenu, setStatusMenu]   = useState(false)
   const [pastaMenu, setPastaMenu]     = useState(false)
   const [tagInput, setTagInput]       = useState('')
   const [secaoAberta, setSecaoAberta] = useState<SecaoKey | null>(null)
   const [modoPulpito, setModoPulpito] = useState(false)
+  const [menuAberto, setMenuAberto]   = useState(false)
 
   const [dados, setDados] = useState({
     titulo:             inicial.titulo,
@@ -106,118 +105,98 @@ export default function EsbocoEditor({ esboco: inicial, pastas }: Props) {
         />
       )}
 
-      <div className="flex-1 flex flex-col overflow-hidden" style={{ background: 'var(--bg)' }}>
+      <div className="d-flex flex-column h-100" style={{ background: '#fff' }}>
 
-        {/* ── Header do editor ─────────────────────────────── */}
-        <div
-          className="shrink-0"
-          style={{
-            background: 'var(--surface)',
-            borderBottom: '2px solid var(--ink-1)',
-            padding: '40px 56px 28px',
-          }}
-        >
+        {/* ── Header do editor ──────────────────────────── */}
+        <div className="flex-shrink-0 border-bottom px-4 pt-4 pb-3" style={{ background: '#fff' }}>
+
           {/* Referência bíblica */}
-          <div className="flex items-center gap-2 mb-3">
-            <BookOpen className="w-3.5 h-3.5 shrink-0" style={{ color: 'var(--ink-4)' }} />
+          <div className="d-flex align-items-center gap-2 mb-2">
+            <BookOpen size={13} className="text-muted flex-shrink-0" />
             <input
               type="text"
+              className="form-control form-control-sm border-0 p-0 fst-italic"
               value={dados.referencia_biblica}
               onChange={e => update('referencia_biblica', e.target.value)}
               placeholder="Referência bíblica — ex: João 3:16"
-              className="text-sm bg-transparent focus:outline-none flex-1"
-              style={{ color: 'var(--brand)', fontStyle: 'italic', fontFamily: 'Georgia, serif' }}
+              style={{
+                color: 'var(--brand)',
+                fontFamily: 'Georgia, serif',
+                background: 'transparent',
+                boxShadow: 'none',
+              }}
             />
           </div>
 
           {/* Título — grande, serif */}
           <input
             type="text"
+            className="form-control border-0 p-0 mb-3 fw-bold"
             value={dados.titulo}
             onChange={e => update('titulo', e.target.value)}
             placeholder="Título do esboço"
-            className="w-full bg-transparent focus:outline-none mb-6"
             style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: '2rem',
-              fontWeight: 700,
+              fontSize: '1.75rem',
               color: 'var(--ink-1)',
               lineHeight: 1.2,
               letterSpacing: '-0.02em',
+              background: 'transparent',
+              boxShadow: 'none',
             }}
           />
 
-          {/* Barra de ações — discreta, tipografia pequeena */}
-          <div
-            className="flex items-center gap-4 flex-wrap"
-            style={{ borderTop: '1px solid var(--line)', paddingTop: '16px' }}
-          >
+          {/* Barra de ações */}
+          <div className="d-flex align-items-center gap-3 flex-wrap border-top pt-2">
 
             {/* Autosave */}
-            <span
-              className="flex items-center gap-1.5 uppercase tracking-widest"
-              style={{ fontSize: '0.625rem', color: 'var(--ink-4)', letterSpacing: '0.08em' }}
-            >
+            <small className="text-muted">
               {saving
-                ? <><Loader2 className="w-2.5 h-2.5 animate-spin" /> Salvando…</>
+                ? <><span className="spinner-border spinner-border-sm me-1" style={{ width: '0.6rem', height: '0.6rem' }} />Salvando…</>
                 : lastSaved
                   ? <>Salvo {formatDistanceToNow(lastSaved, { locale: ptBR, addSuffix: true })}</>
-                  : null}
-            </span>
+                  : null
+              }
+            </small>
 
-            <div className="flex-1" />
+            <div className="flex-grow-1" />
 
             {/* Fixar */}
             <button
+              type="button"
               onClick={handleToggleFixado}
+              className="btn btn-sm p-1 border-0"
               title={dados.fixado ? 'Desafixar' : 'Fixar'}
-              className="flex items-center justify-center w-7 h-7 transition hover:opacity-50"
-              style={{ color: dados.fixado ? 'var(--brand)' : 'var(--ink-4)' }}
+              style={{ color: dados.fixado ? 'var(--brand)' : 'var(--ink-4)', background: 'none' }}
             >
-              <Star className="w-3.5 h-3.5" style={{ fill: dados.fixado ? 'var(--brand)' : 'none' }} />
+              <Star size={14} style={{ fill: dados.fixado ? 'var(--brand)' : 'none' }} />
             </button>
 
-            {/* Status */}
-            <div className="relative">
+            {/* Status dropdown */}
+            <div className="position-relative">
               <button
+                type="button"
+                className={`btn btn-sm badge bg-${statusAtual.bsColor}${statusAtual.textDark ? ' text-dark' : ''} border-0`}
                 onClick={() => { setStatusMenu(!statusMenu); setPastaMenu(false) }}
-                className="flex items-center gap-1.5 transition hover:opacity-60"
-                style={{
-                  fontSize: '0.6875rem',
-                  color: statusAtual.color,
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
-                }}
+                style={{ fontSize: '0.7rem' }}
               >
-                <StatusIcon className="w-3 h-3" />
+                <StatusIcon size={11} className="me-1" />
                 {statusAtual.label}
               </button>
               {statusMenu && (
                 <>
-                  <div className="fixed inset-0 z-10" onClick={() => setStatusMenu(false)} />
-                  <div
-                    className="absolute right-0 top-7 z-20 py-1 w-36 overflow-hidden"
-                    style={{
-                      background: 'var(--surface)',
-                      border: '1px solid var(--line)',
-                      boxShadow: 'var(--shadow-md)',
-                    }}
-                  >
+                  <div className="position-fixed" style={{ inset: 0, zIndex: 10 }} onClick={() => setStatusMenu(false)} />
+                  <div className="dropdown-menu show" style={{ zIndex: 20, minWidth: '150px', fontSize: '0.8125rem', top: '100%', right: 0 }}>
                     {(Object.entries(STATUS_CONFIG) as [EsbocStatus, typeof STATUS_CONFIG.rascunho][]).map(([key, cfg]) => {
                       const Icon = cfg.icon
                       return (
                         <button
                           key={key}
+                          className="dropdown-item d-flex align-items-center gap-2"
+                          style={{ fontWeight: dados.status === key ? 700 : 400 }}
                           onClick={() => { update('status', key); setStatusMenu(false) }}
-                          className="w-full flex items-center gap-2 px-4 py-2 text-xs transition hover:bg-[var(--hover)]"
-                          style={{
-                            color: dados.status === key ? 'var(--ink-1)' : 'var(--ink-3)',
-                            fontWeight: dados.status === key ? 700 : 400,
-                            letterSpacing: '0.04em',
-                          }}
                         >
-                          <Icon className="w-3 h-3" />
+                          <Icon size={12} />
                           {cfg.label}
                         </button>
                       )
@@ -227,48 +206,36 @@ export default function EsbocoEditor({ esboco: inicial, pastas }: Props) {
               )}
             </div>
 
-            {/* Pasta */}
-            <div className="relative">
+            {/* Pasta dropdown */}
+            <div className="position-relative">
               <button
+                type="button"
+                className="btn btn-sm btn-outline-secondary border-0 d-flex align-items-center gap-1"
                 onClick={() => { setPastaMenu(!pastaMenu); setStatusMenu(false) }}
-                className="flex items-center gap-1.5 transition hover:opacity-60"
-                style={{
-                  fontSize: '0.6875rem',
-                  color: 'var(--ink-4)',
-                  fontWeight: 500,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
-                }}
+                style={{ fontSize: '0.75rem' }}
               >
-                <FolderOpen className="w-3 h-3" style={{ color: pasta?.cor ?? 'var(--ink-4)' }} />
+                <FolderOpen size={12} style={{ color: pasta?.cor ?? 'var(--ink-4)' }} />
                 {pasta?.nome ?? 'Pasta'}
               </button>
               {pastaMenu && (
                 <>
-                  <div className="fixed inset-0 z-10" onClick={() => setPastaMenu(false)} />
-                  <div
-                    className="absolute right-0 top-7 z-20 py-1 w-44 overflow-hidden"
-                    style={{
-                      background: 'var(--surface)',
-                      border: '1px solid var(--line)',
-                      boxShadow: 'var(--shadow-md)',
-                    }}
-                  >
+                  <div className="position-fixed" style={{ inset: 0, zIndex: 10 }} onClick={() => setPastaMenu(false)} />
+                  <div className="dropdown-menu show" style={{ zIndex: 20, minWidth: '170px', fontSize: '0.8125rem', top: '100%', right: 0 }}>
                     <button
+                      className="dropdown-item"
+                      style={{ fontWeight: !dados.pasta_id ? 700 : 400 }}
                       onClick={() => { update('pasta_id', null); setPastaMenu(false) }}
-                      className="w-full flex items-center gap-2 px-4 py-2 text-xs transition hover:bg-[var(--hover)]"
-                      style={{ color: !dados.pasta_id ? 'var(--ink-1)' : 'var(--ink-3)', fontWeight: !dados.pasta_id ? 700 : 400 }}
                     >
                       Sem pasta
                     </button>
                     {pastas.map(p => (
                       <button
                         key={p.id}
+                        className="dropdown-item d-flex align-items-center gap-2"
+                        style={{ fontWeight: dados.pasta_id === p.id ? 700 : 400 }}
                         onClick={() => { update('pasta_id', p.id); setPastaMenu(false) }}
-                        className="w-full flex items-center gap-2 px-4 py-2 text-xs transition hover:bg-[var(--hover)]"
-                        style={{ color: dados.pasta_id === p.id ? 'var(--ink-1)' : 'var(--ink-3)', fontWeight: dados.pasta_id === p.id ? 700 : 400 }}
                       >
-                        <div className="w-2 h-2 shrink-0" style={{ background: p.cor }} />
+                        <span className="rounded-circle" style={{ width: 8, height: 8, background: p.cor, display: 'inline-block', flexShrink: 0 }} />
                         {p.nome}
                       </button>
                     ))}
@@ -277,48 +244,35 @@ export default function EsbocoEditor({ esboco: inicial, pastas }: Props) {
               )}
             </div>
 
-            {/* Púlpito */}
+            {/* Modo Púlpito */}
             <button
+              type="button"
               onClick={() => setModoPulpito(true)}
-              className="flex items-center gap-1.5 transition hover:opacity-60"
-              style={{
-                fontSize: '0.6875rem',
-                color: 'var(--ink-1)',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-              }}
+              className="btn btn-sm btn-dark d-flex align-items-center gap-1"
+              style={{ fontSize: '0.75rem' }}
             >
-              <MonitorPlay className="w-3 h-3" />
+              <MonitorPlay size={12} />
               Púlpito
             </button>
 
-            {/* Menu */}
-            <div className="relative">
+            {/* Menu (excluir) */}
+            <div className="position-relative">
               <button
+                type="button"
+                className="btn btn-sm btn-outline-secondary border-0"
                 onClick={() => setMenuAberto(!menuAberto)}
-                className="flex items-center justify-center w-7 h-7 transition hover:opacity-50"
-                style={{ color: 'var(--ink-4)' }}
               >
-                <MoreVertical className="w-3.5 h-3.5" />
+                ···
               </button>
               {menuAberto && (
                 <>
-                  <div className="fixed inset-0 z-10" onClick={() => setMenuAberto(false)} />
-                  <div
-                    className="absolute right-0 top-8 z-20 py-1 w-40 overflow-hidden"
-                    style={{
-                      background: 'var(--surface)',
-                      border: '1px solid var(--line)',
-                      boxShadow: 'var(--shadow-md)',
-                    }}
-                  >
+                  <div className="position-fixed" style={{ inset: 0, zIndex: 10 }} onClick={() => setMenuAberto(false)} />
+                  <div className="dropdown-menu show" style={{ zIndex: 20, fontSize: '0.8125rem', top: '100%', right: 0 }}>
                     <button
+                      className="dropdown-item text-danger d-flex align-items-center gap-2"
                       onClick={handleDelete}
-                      className="w-full flex items-center gap-2 px-4 py-2 text-xs transition hover:bg-[var(--danger-bg)]"
-                      style={{ color: 'var(--danger)', letterSpacing: '0.04em' }}
                     >
-                      <Trash2 className="w-3 h-3" />
+                      <Trash2 size={12} />
                       Excluir esboço
                     </button>
                   </div>
@@ -328,35 +282,39 @@ export default function EsbocoEditor({ esboco: inicial, pastas }: Props) {
           </div>
 
           {/* Tags */}
-          <div className="flex items-center gap-2 mt-3 flex-wrap">
-            <Tag className="w-3 h-3 shrink-0" style={{ color: 'var(--ink-4)' }} />
+          <div className="d-flex align-items-center flex-wrap gap-2 mt-2">
+            <Tag size={11} className="text-muted" />
             {dados.tags.map(tag => (
               <span
                 key={tag}
-                className="flex items-center gap-1 uppercase tracking-widest"
-                style={{ fontSize: '0.625rem', color: 'var(--ink-3)', letterSpacing: '0.1em' }}
+                className="badge bg-light text-muted d-flex align-items-center gap-1"
+                style={{ fontSize: '0.65rem', fontWeight: 400 }}
               >
                 #{tag}
-                <button onClick={() => update('tags', dados.tags.filter(t => t !== tag))} className="hover:opacity-50 transition">
-                  <X className="w-2.5 h-2.5" />
-                </button>
+                <button
+                  type="button"
+                  className="btn-close btn-close-sm ms-1"
+                  style={{ fontSize: '0.5rem' }}
+                  onClick={() => update('tags', dados.tags.filter(t => t !== tag))}
+                  aria-label="Remover tag"
+                />
               </span>
             ))}
             <input
               type="text"
+              className="border-0 p-0 bg-transparent"
               placeholder="+ tag"
               value={tagInput}
               onChange={e => setTagInput(e.target.value)}
               onKeyDown={handleAddTag}
-              className="bg-transparent focus:outline-none uppercase tracking-widest"
-              style={{ fontSize: '0.625rem', color: 'var(--ink-4)', width: '3rem', letterSpacing: '0.1em' }}
+              style={{ fontSize: '0.7rem', color: 'var(--ink-4)', width: '3.5rem', outline: 'none' }}
             />
           </div>
         </div>
 
-        {/* ── Seções ───────────────────────────────────────── */}
-        <div className="flex-1 overflow-y-auto">
-          <div className="max-w-2xl mx-auto px-14 py-8">
+        {/* ── Seções ─────────────────────────────────────── */}
+        <div className="flex-grow-1 overflow-auto">
+          <div className="mx-auto p-4" style={{ maxWidth: '760px' }}>
             {SECOES.map((secao, i) => (
               <SecaoCard
                 key={secao.key}
@@ -390,22 +348,19 @@ function SecaoCard({ num, label, placeholder, content, onChange, isOpen, onToggl
   const isEmpty = !content || content === '<p></p>'
 
   return (
-    <div
-      className="transition-all"
-      style={{ borderTop: '1px solid var(--line)', paddingTop: isLast ? undefined : undefined }}
-    >
-      <button
+    <div className="card mb-2">
+      {/* Card header — clicável para expandir/colapsar */}
+      <div
+        className="card-header d-flex align-items-center gap-3 cursor-pointer"
         onClick={onToggle}
-        className="w-full flex items-center gap-4 py-4 text-left transition hover:opacity-70"
+        style={{ cursor: 'pointer' }}
       >
-        {/* Numeral romano — editorial */}
         <span
           style={{
             fontFamily: 'var(--font-serif)',
-            fontSize: '0.6875rem',
+            fontSize: '0.75rem',
             fontWeight: 700,
             color: !isEmpty ? 'var(--ink-1)' : 'var(--ink-4)',
-            letterSpacing: '0.05em',
             minWidth: '1.5rem',
             textAlign: 'right',
           }}
@@ -413,23 +368,21 @@ function SecaoCard({ num, label, placeholder, content, onChange, isOpen, onToggl
           {num}
         </span>
 
-        {/* Label + preview */}
-        <div className="flex-1 min-w-0">
+        <div className="flex-grow-1">
           <span
-            className="uppercase tracking-widest"
+            className="text-uppercase fw-bold"
             style={{
               fontSize: '0.6875rem',
-              fontWeight: 700,
               color: !isEmpty ? 'var(--ink-1)' : 'var(--ink-4)',
-              letterSpacing: '0.1em',
+              letterSpacing: '0.08em',
             }}
           >
             {label}
           </span>
           {!isEmpty && !isOpen && (
             <p
-              className="truncate mt-0.5"
-              style={{ fontSize: '0.8125rem', color: 'var(--ink-3)', fontFamily: 'Georgia, serif', fontStyle: 'italic' }}
+              className="mb-0 text-truncate fst-italic text-muted"
+              style={{ fontSize: '0.8125rem', fontFamily: 'Georgia, serif' }}
             >
               {content.replace(/<[^>]*>/g, '').slice(0, 100)}
             </p>
@@ -437,13 +390,14 @@ function SecaoCard({ num, label, placeholder, content, onChange, isOpen, onToggl
         </div>
 
         {isOpen
-          ? <ChevronDown className="w-3.5 h-3.5 shrink-0" style={{ color: 'var(--ink-4)' }} />
-          : <ChevronRight className="w-3.5 h-3.5 shrink-0" style={{ color: 'var(--ink-4)' }} />
+          ? <ChevronDown size={14} className="text-muted flex-shrink-0" />
+          : <ChevronRight size={14} className="text-muted flex-shrink-0" />
         }
-      </button>
+      </div>
 
+      {/* Card body — editor Tiptap */}
       {isOpen && (
-        <div className="pl-10 pb-6">
+        <div className="card-body">
           <TiptapEditor
             content={content}
             placeholder={placeholder}
@@ -452,9 +406,6 @@ function SecaoCard({ num, label, placeholder, content, onChange, isOpen, onToggl
           />
         </div>
       )}
-
-      {/* Linha inferior — último não tem */}
-      {!isLast && !isOpen && <div style={{ borderBottom: '0px' }} />}
     </div>
   )
 }

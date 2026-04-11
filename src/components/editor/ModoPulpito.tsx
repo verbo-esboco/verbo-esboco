@@ -26,7 +26,6 @@ export default function ModoPulpito({ esboco, onFechar, onPregado }: Props) {
   const [salvando, setSalvando] = useState(false)
   const contentRef = useRef<HTMLDivElement>(null)
 
-  // Bloqueia scroll do body e ativa tela cheia
   useEffect(() => {
     document.body.style.overflow = 'hidden'
     document.documentElement.requestFullscreen?.().catch(() => {})
@@ -64,133 +63,211 @@ export default function ModoPulpito({ esboco, onFechar, onPregado }: Props) {
   })
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#0d0d0d] flex flex-col">
+    <div
+      style={{
+        position: 'fixed', inset: 0, zIndex: 1050,
+        background: '#0d0d0d',
+        display: 'flex', flexDirection: 'column',
+      }}
+    >
       {/* Barra superior */}
-      <div className="flex items-center justify-between px-6 py-3 border-b border-white/10">
+      <div
+        style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '12px 24px',
+          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          flexShrink: 0,
+        }}
+      >
         <div>
-          <p className="text-white/40 text-xs uppercase tracking-widest font-medium">Modo Púlpito</p>
-          <p className="text-white font-bold text-base mt-0.5">{esboco.titulo}</p>
+          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em', margin: 0, fontWeight: 500 }}>
+            Modo Púlpito
+          </p>
+          <p style={{ color: '#fff', fontWeight: 700, fontSize: '1rem', margin: 0 }}>
+            {esboco.titulo}
+          </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           {esboco.status !== 'pregado' && (
             <button
               onClick={() => setMostrarPregado(true)}
-              className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium px-4 py-2 rounded-xl transition"
+              style={{
+                display: 'flex', alignItems: 'center', gap: '8px',
+                background: 'var(--brand)', border: 'none',
+                color: '#fff', fontSize: '0.875rem', fontWeight: 500,
+                padding: '8px 16px', borderRadius: '8px', cursor: 'pointer',
+              }}
             >
-              <Mic className="w-4 h-4" />
+              <Mic size={16} />
               Marcar como Pregado
             </button>
           )}
           <button
             onClick={onFechar}
-            className="p-2 rounded-xl hover:bg-white/10 text-white/60 hover:text-white transition"
+            style={{
+              padding: '8px', borderRadius: '8px', border: 'none',
+              background: 'transparent', cursor: 'pointer',
+              color: 'rgba(255,255,255,0.6)',
+            }}
             title="Fechar (Esc)"
           >
-            <X className="w-5 h-5" />
+            <X size={20} />
           </button>
         </div>
       </div>
 
       {/* Conteúdo com scroll */}
-      <div ref={contentRef} className="flex-1 overflow-y-auto scroll-smooth">
-        <div className="max-w-2xl mx-auto px-6 py-10 space-y-12">
+      <div ref={contentRef} style={{ flex: 1, overflowY: 'auto' }}>
+        <div style={{ maxWidth: '680px', margin: '0 auto', padding: '40px 24px', display: 'flex', flexDirection: 'column', gap: '48px' }}>
 
           {/* Referência bíblica */}
           {esboco.referencia_biblica && (
-            <p className="text-orange-400 text-xl font-semibold text-center tracking-wide">
+            <p style={{ color: 'var(--brand-bright)', fontSize: '1.25rem', fontWeight: 600, textAlign: 'center', letterSpacing: '0.03em', margin: 0 }}>
               {esboco.referencia_biblica}
             </p>
           )}
 
           {/* Seções */}
-          {secoesComConteudo.map((secao, i) => (
+          {secoesComConteudo.map(secao => (
             <section key={secao.key}>
-              <div className="flex items-center gap-3 mb-4">
-                <span className="text-2xl">{secao.emoji}</span>
-                <h2 className="text-white/50 text-sm font-semibold uppercase tracking-widest">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                <span style={{ fontSize: '1.5rem' }}>{secao.emoji}</span>
+                <h2 style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', margin: 0 }}>
                   {secao.label}
                 </h2>
-                <div className="flex-1 h-px bg-white/10" />
+                <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }} />
               </div>
               <div
-                className="pulpito-content text-white/90 text-lg leading-relaxed"
+                className="pulpito-content"
+                style={{ color: 'rgba(255,255,255,0.9)', fontSize: '1.125rem', lineHeight: 1.8 }}
                 dangerouslySetInnerHTML={{ __html: esboco[secao.key] as string }}
               />
             </section>
           ))}
 
           {/* Fim */}
-          <div className="text-center py-10 border-t border-white/10">
-            <p className="text-white/30 text-sm">— Fim do esboço —</p>
+          <div style={{ textAlign: 'center', paddingTop: '40px', paddingBottom: '40px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+            <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.875rem', margin: 0 }}>— Fim do esboço —</p>
             {esboco.status !== 'pregado' && (
               <button
                 onClick={() => setMostrarPregado(true)}
-                className="mt-6 flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-medium px-6 py-3 rounded-xl transition mx-auto"
+                style={{
+                  marginTop: '24px', display: 'inline-flex', alignItems: 'center', gap: '8px',
+                  background: 'var(--brand)', border: 'none',
+                  color: '#fff', fontWeight: 500, padding: '12px 24px',
+                  borderRadius: '8px', cursor: 'pointer', fontSize: '0.9375rem',
+                }}
               >
-                <Mic className="w-5 h-5" />
+                <Mic size={18} />
                 Marcar como Pregado
               </button>
             )}
             {esboco.status === 'pregado' && (
-              <p className="text-green-400/70 text-sm mt-4">✓ Este esboço já foi pregado</p>
+              <p style={{ color: 'rgba(74,222,128,0.7)', fontSize: '0.875rem', marginTop: '16px' }}>
+                ✓ Este esboço já foi pregado
+              </p>
             )}
           </div>
         </div>
       </div>
 
-      {/* Botão rolar para baixo */}
+      {/* Botão scroll para baixo */}
       <button
         onClick={scrollParaBaixo}
-        className="fixed bottom-6 right-6 w-10 h-10 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition"
+        style={{
+          position: 'fixed', bottom: '24px', right: '24px',
+          width: '40px', height: '40px',
+          background: 'rgba(255,255,255,0.1)', border: 'none',
+          borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          color: '#fff', cursor: 'pointer', zIndex: 1055,
+        }}
         title="Rolar para baixo"
       >
-        <ChevronDown className="w-5 h-5" />
+        <ChevronDown size={20} />
       </button>
 
-      {/* Modal Pregado */}
+      {/* Modal: Registrar pregação */}
       {mostrarPregado && (
-        <div className="fixed inset-0 z-60 flex items-center justify-center bg-black/70 px-4">
-          <div className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-6 w-full max-w-sm">
-            <h3 className="text-white font-bold text-lg mb-1">Registrar pregação</h3>
-            <p className="text-white/50 text-sm mb-5">Quando e onde esta mensagem foi pregada?</p>
+        <div
+          style={{
+            position: 'fixed', inset: 0, zIndex: 1060,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            background: 'rgba(0,0,0,0.7)', padding: '16px',
+          }}
+        >
+          <div
+            style={{
+              background: '#1a1a1a',
+              border: '1px solid rgba(255,255,255,0.1)',
+              borderRadius: '16px',
+              padding: '24px',
+              width: '100%', maxWidth: '360px',
+            }}
+          >
+            <h3 style={{ color: '#fff', fontWeight: 700, fontSize: '1.125rem', margin: '0 0 4px' }}>
+              Registrar pregação
+            </h3>
+            <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.875rem', margin: '0 0 20px' }}>
+              Quando e onde esta mensagem foi pregada?
+            </p>
 
-            <div className="space-y-3">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <div>
-                <label className="text-white/50 text-xs font-medium mb-1 flex items-center gap-1">
-                  <Calendar className="w-3 h-3" /> Data
+                <label style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '6px' }}>
+                  <Calendar size={12} /> Data
                 </label>
                 <input
                   type="date"
                   value={dataPregacao}
                   onChange={e => setDataPregacao(e.target.value)}
-                  className="w-full bg-white/10 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  style={{
+                    width: '100%', background: 'rgba(255,255,255,0.08)',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    borderRadius: '10px', padding: '10px 12px',
+                    color: '#fff', fontSize: '0.875rem', outline: 'none',
+                  }}
                 />
               </div>
               <div>
-                <label className="text-white/50 text-xs font-medium mb-1 flex items-center gap-1">
-                  <MapPin className="w-3 h-3" /> Local (opcional)
+                <label style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '6px' }}>
+                  <MapPin size={12} /> Local (opcional)
                 </label>
                 <input
                   type="text"
                   value={localPregacao}
                   onChange={e => setLocalPregacao(e.target.value)}
                   placeholder="Ex: Igreja Central, Culto Domingo"
-                  className="w-full bg-white/10 border border-white/10 rounded-xl px-3 py-2.5 text-white text-sm placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  style={{
+                    width: '100%', background: 'rgba(255,255,255,0.08)',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    borderRadius: '10px', padding: '10px 12px',
+                    color: '#fff', fontSize: '0.875rem', outline: 'none',
+                  }}
                 />
               </div>
             </div>
 
-            <div className="flex gap-2 mt-5">
+            <div style={{ display: 'flex', gap: '8px', marginTop: '20px' }}>
               <button
                 onClick={() => setMostrarPregado(false)}
-                className="flex-1 border border-white/10 text-white/60 rounded-xl py-2.5 text-sm hover:bg-white/5 transition"
+                style={{
+                  flex: 1, border: '1px solid rgba(255,255,255,0.1)',
+                  background: 'transparent', color: 'rgba(255,255,255,0.6)',
+                  borderRadius: '10px', padding: '10px', fontSize: '0.875rem', cursor: 'pointer',
+                }}
               >
                 Cancelar
               </button>
               <button
                 onClick={handleConfirmarPregado}
                 disabled={salvando}
-                className="flex-1 bg-orange-500 hover:bg-orange-600 text-white rounded-xl py-2.5 text-sm font-medium transition disabled:opacity-50"
+                style={{
+                  flex: 1, background: 'var(--brand)', border: 'none',
+                  color: '#fff', borderRadius: '10px',
+                  padding: '10px', fontSize: '0.875rem', fontWeight: 500,
+                  cursor: salvando ? 'not-allowed' : 'pointer',
+                  opacity: salvando ? 0.5 : 1,
+                }}
               >
                 {salvando ? 'Salvando...' : 'Confirmar'}
               </button>

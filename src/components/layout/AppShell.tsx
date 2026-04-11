@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 import type { User } from '@supabase/supabase-js'
 import type { Esboco, Pasta } from '@/types'
 import EsbocoList from './EsbocoList'
-import { Plus, LogOut, ArrowLeft } from 'lucide-react'
+import { Plus, LogOut } from 'lucide-react'
 import { signOut, createEsboco } from '@/lib/actions'
 import Image from 'next/image'
 
@@ -32,161 +32,162 @@ export default function AppShell({ user, esbocos, pastas, children }: Props) {
   }
 
   return (
-    <div className="h-screen flex overflow-hidden" style={{ background: 'var(--bg)' }}>
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
 
-      {/* ── Painel Lista ─────────────────────────────────── */}
-      <div
-        className={`flex flex-col shrink-0 transition-all ${
-          isEditing
-            ? 'hidden md:flex md:w-[280px] lg:w-[320px]'
-            : 'flex w-full md:w-full'
-        }`}
-        style={{
-          background: 'var(--surface)',
-          borderRight: isEditing ? '1px solid var(--line)' : 'none',
-        }}
-      >
-        {/* Header estilo Radcliffe */}
-        <div
-          className="shrink-0"
-          style={{ borderBottom: '2px solid var(--ink-1)', padding: isEditing ? '20px 20px 16px' : '32px 32px 20px' }}
-        >
-          {/* Wordmark */}
-          <div className="flex items-center justify-between mb-0">
-            <div className="flex items-center gap-3">
-              <Image
-                src="/verbo.png"
-                alt="VERBO"
-                width={isEditing ? 24 : 30}
-                height={isEditing ? 24 : 30}
-                className="object-contain shrink-0"
-              />
-              <div>
-                <span
-                  className="font-bold tracking-tight leading-none"
-                  style={{
-                    fontFamily: 'var(--font-serif)',
-                    fontSize: isEditing ? '1rem' : '1.25rem',
-                    color: 'var(--ink-1)',
-                    letterSpacing: '-0.01em',
-                  }}
-                >
-                  Verbo
-                </span>
-                {!isEditing && (
-                  <p
-                    className="mt-0.5 uppercase tracking-widest"
-                    style={{ fontSize: '0.6rem', color: 'var(--ink-3)', letterSpacing: '0.12em' }}
-                  >
-                    Esboços Bíblicos
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* Ações */}
-            <div className="flex items-center gap-1">
-              <button
-                onClick={handleNovo}
-                disabled={isPending}
-                className="flex items-center gap-1.5 font-semibold text-white transition hover:opacity-80 active:scale-95 disabled:opacity-50"
-                style={{
-                  background: 'var(--ink-1)',
-                  padding: isEditing ? '5px 12px' : '7px 16px',
-                  fontSize: '0.75rem',
-                  letterSpacing: '0.02em',
-                }}
-              >
-                <Plus className={isEditing ? 'w-3 h-3' : 'w-3.5 h-3.5'} />
-                Novo
-              </button>
-              <form action={signOut}>
-                <button
-                  type="submit"
-                  className="w-8 h-8 flex items-center justify-center transition hover:opacity-50"
-                  style={{ color: 'var(--ink-3)' }}
-                  title="Sair"
-                >
-                  <LogOut className="w-3.5 h-3.5" />
-                </button>
-              </form>
-            </div>
-          </div>
-
-          {/* Contagem — só na tela cheia */}
-          {!isEditing && (
-            <p className="mt-3" style={{ fontSize: '0.75rem', color: 'var(--ink-4)' }}>
-              {esbocos.length} {esbocos.length === 1 ? 'esboço' : 'esboços'}
-            </p>
-          )}
-        </div>
-
-        {/* Lista */}
-        <div className="flex-1 overflow-hidden">
-          <EsbocoList esbocos={esbocos} pastas={pastas} compacto={isEditing} />
-        </div>
-
-        {/* Bottom nav mobile */}
-        <div
-          className="md:hidden flex items-center justify-around shrink-0"
-          style={{
-            borderTop: '1px solid var(--line)',
-            paddingTop: '0.875rem',
-            paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 0.875rem)',
-            background: 'var(--surface)',
-          }}
-        >
-          <Link href="/esbocos" className="flex flex-col items-center gap-1 px-6">
-            <svg className="w-5 h-5" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: 'var(--ink-1)' }}>
-              <rect x="3" y="3" width="14" height="14" rx="1"/>
-              <line x1="3" y1="8" x2="17" y2="8"/>
-              <line x1="7" y1="8" x2="7" y2="17"/>
-            </svg>
-            <span className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: 'var(--ink-1)' }}>Esboços</span>
+      {/* ── Navbar (dark, idêntica ao template) ─────────── */}
+      <nav className="navbar navbar-expand-lg navbar-dark bg-dark flex-shrink-0">
+        <div className="container-fluid px-3">
+          <Link className="navbar-brand d-flex align-items-center gap-2 py-1" href="/esbocos">
+            <Image src="/verbo.png" alt="VERBO" width={26} height={26} className="object-contain" />
+            Verbo
           </Link>
 
-          <button
-            onClick={handleNovo}
-            disabled={isPending}
-            className="w-12 h-12 flex items-center justify-center text-white -mt-6 disabled:opacity-60 active:scale-95"
-            style={{ background: 'var(--ink-1)' }}
-          >
-            <Plus className="w-5 h-5" />
-          </button>
+          <div className="d-flex align-items-center gap-2">
+            <button
+              onClick={handleNovo}
+              disabled={isPending}
+              className="btn btn-sm btn-primary d-flex align-items-center gap-1"
+            >
+              {isPending
+                ? <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
+                : <Plus size={14} />
+              }
+              <span>Novo</span>
+            </button>
 
-          <button className="flex flex-col items-center gap-1 px-6" style={{ color: 'var(--ink-3)' }}>
-            <LogOut className="w-5 h-5" />
-            <span className="text-[10px] uppercase tracking-wider font-semibold">Sair</span>
-          </button>
+            <form action={signOut}>
+              <button
+                type="submit"
+                className="btn btn-sm btn-outline-light d-flex align-items-center gap-1"
+                title="Sair"
+              >
+                <LogOut size={14} />
+                <span className="d-none d-sm-inline">Sair</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </nav>
+
+      {/* ── Corpo principal ──────────────────────────────── */}
+      <div style={{ flex: 1, overflow: 'hidden', display: 'flex' }}>
+        <div className="container-fluid h-100 p-0">
+          <div className="row h-100 g-0">
+
+            {/* ── Painel lista ─── */}
+            <div
+              className={
+                isEditing
+                  ? 'd-none d-lg-flex flex-column col-lg-3 border-end h-100 overflow-auto'
+                  : 'd-flex flex-column col-12 col-lg-8 h-100 overflow-auto border-end'
+              }
+              style={{ background: '#fff' }}
+            >
+              <EsbocoList esbocos={esbocos} pastas={pastas} compacto={isEditing} />
+            </div>
+
+            {/* ── Editor ou Sidebar ─── */}
+            {isEditing ? (
+              <div
+                className="col-12 col-lg-9 h-100 d-flex flex-column overflow-hidden"
+                style={{ background: '#fff' }}
+              >
+                {/* Botão voltar só no mobile */}
+                <div className="d-lg-none border-bottom px-3 py-2 flex-shrink-0">
+                  <Link href="/esbocos" className="btn btn-sm btn-outline-secondary">
+                    ← Voltar
+                  </Link>
+                </div>
+                <main className="flex-grow-1 d-flex flex-column overflow-hidden">
+                  {children}
+                </main>
+              </div>
+            ) : (
+              /* Sidebar widgets (visível só em desktop na view de lista) */
+              <div
+                className="col-lg-4 h-100 overflow-auto d-none d-lg-block p-3"
+                style={{ background: '#f8f9fa' }}
+              >
+                {/* Widget: Resumo */}
+                <div className="card mb-3">
+                  <div className="card-header fw-semibold">Seus esboços</div>
+                  <div className="card-body">
+                    <p className="text-muted small mb-2">
+                      {esbocos.length} {esbocos.length === 1 ? 'esboço' : 'esboços'} no total
+                    </p>
+                    <div className="d-flex flex-wrap gap-1">
+                      <span className="badge bg-warning text-dark">
+                        {esbocos.filter(e => e.status === 'rascunho').length} em edição
+                      </span>
+                      <span className="badge bg-success">
+                        {esbocos.filter(e => e.status === 'pronto').length} pronto{esbocos.filter(e => e.status === 'pronto').length !== 1 ? 's' : ''}
+                      </span>
+                      <span className="badge bg-primary">
+                        {esbocos.filter(e => e.status === 'pregado').length} pregado{esbocos.filter(e => e.status === 'pregado').length !== 1 ? 's' : ''}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Widget: Pastas */}
+                {pastas.length > 0 && (
+                  <div className="card mb-3">
+                    <div className="card-header fw-semibold">Pastas</div>
+                    <div className="card-body p-0">
+                      <ul className="list-group list-group-flush">
+                        {pastas.map(p => (
+                          <li key={p.id} className="list-group-item list-group-item-action px-3 py-2">
+                            <Link
+                              href={`/esbocos?pasta=${p.id}`}
+                              className="d-flex align-items-center gap-2 text-decoration-none text-dark small"
+                            >
+                              <span
+                                className="rounded-circle flex-shrink-0"
+                                style={{ width: 10, height: 10, background: p.cor, display: 'inline-block' }}
+                              />
+                              {p.nome}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
+
+                {/* Widget: Filtrar por status */}
+                <div className="card mb-3">
+                  <div className="card-header fw-semibold">Filtrar</div>
+                  <div className="card-body p-0">
+                    <ul className="list-group list-group-flush">
+                      {[
+                        { href: '/esbocos',                    label: 'Todos os esboços' },
+                        { href: '/esbocos?filtro=fixados',     label: 'Fixados' },
+                        { href: '/esbocos?filtro=rascunho',    label: 'Em edição' },
+                        { href: '/esbocos?filtro=pronto',      label: 'Prontos' },
+                        { href: '/esbocos?filtro=pregado',     label: 'Pregados' },
+                      ].map(item => (
+                        <li key={item.href} className="list-group-item list-group-item-action px-3 py-2">
+                          <Link href={item.href} className="text-decoration-none text-dark small">
+                            {item.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                {/* Widget: Info */}
+                <div className="card">
+                  <div className="card-header fw-semibold">Sobre o Verbo</div>
+                  <div className="card-body small text-muted">
+                    Organize seus esboços bíblicos, pregue com confiança e registre cada mensagem.
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-
-      {/* ── Editor ───────────────────────────────────────── */}
-      <div className={`flex flex-col flex-1 overflow-hidden ${!isEditing ? 'hidden' : 'flex'}`}>
-        {isEditing && (
-          <div
-            className="md:hidden flex items-center gap-3 px-5 py-3 shrink-0"
-            style={{
-              borderBottom: '1px solid var(--line)',
-              background: 'var(--surface)',
-              paddingTop: 'calc(env(safe-area-inset-top, 0px) + 0.75rem)',
-            }}
-          >
-            <Link
-              href="/esbocos"
-              className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider"
-              style={{ color: 'var(--ink-1)', fontSize: '0.7rem' }}
-            >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              Voltar
-            </Link>
-          </div>
-        )}
-        <main className="flex-1 flex flex-col overflow-hidden">
-          {children}
-        </main>
-      </div>
-
     </div>
   )
 }
