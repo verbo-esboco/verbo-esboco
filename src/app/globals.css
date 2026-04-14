@@ -97,8 +97,14 @@ body {
   margin: 1rem 0;
 }
 /* Marca-texto — preserva a cor salva no HTML */
-.tiptap mark { border-radius: 2px; padding: 0 2px; }
-.pulpito-content mark { border-radius: 2px; padding: 0 2px; }
+.tiptap mark { border-radius: 3px; padding: 1px 4px; }
+.pulpito-content mark { border-radius: 3px; padding: 1px 4px; }
+
+/* Animação do toast de sugestão */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
 .tiptap strong { font-weight: 700; }
 .tiptap em     { font-style: italic; }

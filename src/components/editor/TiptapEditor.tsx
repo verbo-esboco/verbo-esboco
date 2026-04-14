@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
@@ -13,6 +13,8 @@ import {
   Quote, Highlighter, X
 } from 'lucide-react'
 import { useEffect } from 'react'
+import { AutocorrectExtension, type SuggestionInfo } from './AutocorrectExtension'
+import { SuggestionToast } from './SuggestionToast'
 
 interface Props {
   content: string
@@ -32,6 +34,11 @@ const HIGHLIGHT_COLORS = [
 
 export default function TiptapEditor({ content, placeholder, onChange, minHeight = '80px' }: Props) {
   const [paletteOpen, setPaletteOpen] = useState(false)
+  const [suggestion, setSuggestion] = useState<SuggestionInfo | null>(null)
+
+  const handleSuggest = useCallback((info: SuggestionInfo) => {
+    setSuggestion(info)
+  }, [])
 
   const editor = useEditor({
     extensions: [
@@ -43,6 +50,7 @@ export default function TiptapEditor({ content, placeholder, onChange, minHeight
         emptyEditorClass: 'is-editor-empty',
       }),
       Highlight.configure({ multicolor: true }),
+      AutocorrectExtension.configure({ onSuggest: handleSuggest }),
     ],
     content,
     onUpdate({ editor }) {
@@ -62,6 +70,12 @@ export default function TiptapEditor({ content, placeholder, onChange, minHeight
       editor.commands.setContent(content)
     }
   }, [content]) // eslint-disable-line
+
+  function applySuggestion(text: string, from: number, to: number) {
+    if (!editor) return
+    editor.chain().focus().insertContentAt({ from, to }, text).run()
+    setSuggestion(null)
+  }
 
   if (!editor) return null
 
@@ -273,6 +287,12 @@ export default function TiptapEditor({ content, placeholder, onChange, minHeight
       </div>
 
       <EditorContent editor={editor} />
+
+      <SuggestionToast
+        info={suggestion}
+        onAccept={applySuggestion}
+        onDismiss={() => setSuggestion(null)}
+      />
     </div>
   )
 }
