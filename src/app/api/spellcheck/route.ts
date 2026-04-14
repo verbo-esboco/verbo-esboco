@@ -1,25 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server'
+import fs from 'fs'
+import path from 'path'
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const nspell = require('nspell') as (dict: { aff: Buffer; dic: Buffer }) => {
-  correct: (word: string) => boolean
-  suggest: (word: string) => string[]
-}
+const NSpell = require('nspell') as (
+  dict: { aff: Buffer; dic: Buffer }
+) => { correct: (w: string) => boolean; suggest: (w: string) => string[] }
 
-// Carrega o dicionário uma única vez
-let checkerPromise: Promise<ReturnType<typeof nspell>> | null = null
+type Checker = ReturnType<typeof NSpell>
 
-function getChecker() {
-  if (!checkerPromise) {
-    checkerPromise = (async () => {
-      const { default: dict } = await import('dictionary-pt')
-      return nspell({
-        aff: Buffer.from(dict.aff),
-        dic: Buffer.from(dict.dic),
-      })
-    })()
+// Carregado na primeira requisição e mantido em memória
+let checker: Checker | null = null
+
+function getChecker(): Checker {
+  if (!checker) {
+    // Lê diretamente dos arquivos — evita o import.meta.url do dictionary-pt que
+    // quebra quando o Next.js tenta fazer bundle do pacote ESM
+    const base = path.join(process.cwd(), 'node_modules', 'dictionary-pt')
+    const aff = fs.readFileSync(path.join(base, 'index.aff'))
+    const dic = fs.readFileSync(path.join(base, 'index.dic'))
+    checker = NSpell({ aff, dic })
   }
-  return checkerPromise
+  return checker
 }
 
 export async function GET(req: NextRequest) {
@@ -29,13 +31,13 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const spell = await getChecker()
-    // Aceita forma original (para maiúsculas/nomes próprios) e minúscula
+    const spell = getChecker()
+    // Aceita original (nomes próprios, siglas) e minúscula
     const correct = spell.correct(word) || spell.correct(word.toLowerCase())
     const suggestions = correct ? [] : spell.suggest(word).slice(0, 5)
     return NextResponse.json({ correct, suggestions })
   } catch {
-    // Em caso de erro, não interrompe o usuário
+    // Falha silenciosa — nunca interrompe o usuário
     return NextResponse.json({ correct: true, suggestions: [] })
   }
 }

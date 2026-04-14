@@ -10,7 +10,8 @@ export interface SuggestionInfo {
 }
 
 // Caracteres que delimitam o fim de uma palavra
-const TRIGGER_CHARS = new Set([' ', '.', ',', '!', '?', ';', ':', ')', ']', '"', "'", '\n'])
+// 'Enter' é o valor de event.key para a tecla Enter (não '\n')
+const TRIGGER_CHARS = new Set([' ', 'Enter', '.', ',', '!', '?', ';', ':', ')', ']', '"', "'"])
 
 // Distância de Levenshtein (versão iterativa compacta)
 function levenshtein(a: string, b: string): number {
@@ -32,8 +33,10 @@ function levenshtein(a: string, b: string): number {
 // Extrai a última palavra antes do cursor (apenas letras, incluindo acentuadas)
 function getWordBefore(view: EditorView): { word: string; from: number; to: number } | null {
   const { $from } = view.state.selection
+  // $from.start() retorna o início do bloco corrente — nunca vai atrás da posição 1
+  const blockStart = $from.start()
   const textBefore = view.state.doc.textBetween(
-    Math.max(0, $from.pos - 80),
+    Math.max(blockStart, $from.pos - 80),
     $from.pos,
     ' ',
     ' '
