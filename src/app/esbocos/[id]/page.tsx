@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation'
 import { getEsboco, getPastas } from '@/lib/actions'
 import EsbocoEditor from '@/components/editor/EsbocoEditor'
 
+export const runtime = 'edge'
+
 interface Props {
   params: Promise<{ id: string }>
 }

@@ -1,0 +1,4 @@
+{
+  "build_command": "npm install && npx @cloudflare/next-on-pages",
+  "destination_directory": ".vercel/output/static"
+}
