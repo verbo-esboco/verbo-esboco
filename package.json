@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@floating-ui/dom": "1.7.6",
+    "@popperjs/core": "^2.11.8",
     "@supabase/ssr": "^0.10.0",
     "@supabase/supabase-js": "^2.101.1",
     "@tiptap/extension-color": "^3.22.0",
