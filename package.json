@@ -26,20 +26,20 @@
     "date-fns": "^4.1.0",
     "dictionary-pt": "^4.0.0",
     "lucide-react": "^1.7.0",
-    "next": "16.2.2",
+    "next": "^16.2.4",
     "nspell": "^2.1.5",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "uuid": "^13.0.0"
   },
   "devDependencies": {
-    "@cloudflare/next-on-pages": "^1.13.16",
     "@opennextjs/cloudflare": "^1.19.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "esbuild": "^0.28.0",
     "eslint": "^9",
-    "eslint-config-next": "16.2.2",
+    "eslint-config-next": "^16.2.4",
     "typescript": "^5",
     "wrangler": "^4.82.2"
   }
