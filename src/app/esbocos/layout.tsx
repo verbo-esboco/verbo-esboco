@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
-export const runtime = 'edge'
 import { getEsbocos, getPastas } from '@/lib/actions'
 import AppShell from '@/components/layout/AppShell'
 
